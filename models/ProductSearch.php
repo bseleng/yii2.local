@@ -111,6 +111,8 @@ class ProductSearch extends Product
             $query->orderBy('price_final DESC');
         } elseif ($this->productNameSort == 4) {
             $query->orderBy('price_discounted DESC, price_base DESC');
+//            новая ветка
+//            новый код
 //            $query->orderBy(['(price_discounted - price_base)'=> SORT_DESC]);
         }
 
