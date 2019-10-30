@@ -1,0 +1,394 @@
+/*=======================
+Fonts, Colors, etc.
+=========================*/
+/*
+
+    PRICE: 
+      font-family: 'Lato', sans-serif;
+	
+    DESCRIPTION
+      font-family: 'Julius Sans One', sans-serif;
+
+    PAGE TITLE
+      font-family: 'Averia Sans Libre', cursive;
+      
+      BACKGROUNDS
+        CARDS PRICES
+          light green: #9fff70;
+
+    */
+
+
+/*=======================
+Fixes, etc.
+=========================*/
+		
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+  
+}
+		
+    
+    
+		
+		
+/*=======================
+General Selectors
+=========================*/
+body{
+  font-size: 1rem;
+ /* background-color:  black;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  text-align: center;
+}
+
+
+.bs-products-area{
+  background-color:  #bfbfbf;
+  display: inline-block;
+  padding: 3rem 1rem;
+  width: 85%;
+  min-height: 59rem;
+}
+
+/*=======================
+  Product card container
+=========================*/
+
+.bs-product-card {        
+  width: 15rem;
+  height: 23rem;       
+  border-radius: 5%;
+  border: solid black 1px;
+  padding: 0rem;			
+  margin: 1rem 1rem;
+  position:relative;
+  background-color:white;
+ display: inline-block;
+  overflow:hidden;
+}
+
+/*=======================
+  Product card face content
+=========================*/
+
+  .bs-new-price{
+    font-family: 'Lato', sans-serif;
+    width: 100%;
+    /*background-color: white;*/
+    font-size: 2.5rem;
+    position: absolute;
+    bottom: 1.75rem;        
+    text-align:center;
+    margin: 0.5rem 0rem;
+    display: block;
+    clear:both;
+    /*border: solid black 1px;*/
+  }
+
+  .bs-old-price{
+    font-family: 'Lato', sans-serif;
+    width: 100%;
+    text-decoration: line-through;
+    /*background-color: white;*/
+    font-size: 1.25rem;
+    position: absolute;
+    bottom: 0.5rem;
+    text-align:center;
+    margin: 0.25rem 0rem;
+    display: block;
+    clear:both;
+    color:gray;
+    /*border: solid black 1px;*/
+  }
+  
+  .bs-product-title{
+    float: left;
+    /*background-color: white;*/
+    padding-left: 1rem;
+    padding-right: 6rem;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: 900;
+    font-size: 1.90rem;
+    clear: both;
+    margin: 0.5rem 0 0.5rem;
+    text-align: left;
+    /*clear: left;*/
+    /*border: solid black 1px;*/
+  }
+  
+  .bs-product-long-title{
+    float: left;
+    /*background-color: white;*/
+    padding-left: 1rem;
+    padding-right: 7rem;
+    font-family: 'Julius Sans One', sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    clear: both;
+    margin: 0.5rem 0 0.5rem;
+    text-align: left;
+    /*clear: left;*/
+    /*border: solid black 1px;*/
+  }
+  
+  .bs-product-brand{
+   float: right;
+   /*background-color: white;*/
+   padding-right: 1rem;
+   font-family: 'Julius Sans One', sans-serif;
+   font-weight: 100;
+   font-size: 0.75rem;
+   clear: both;
+   margin: 0.75rem 0 0;
+   /*clear: right;*/
+   /*border: solid black 1px;*/
+   
+  }
+  
+  .bs-product-image{
+    background-color: none;
+    width: auto;
+    height: 7rem;
+    object-fit: fit;
+    clear: both;
+    display: block;
+    position:absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    bottom: 45%;
+    transition: all 0.5s ease-out;
+    text-align: center;
+    /*border: solid black 1px;*/
+  }
+        
+    .bs-product-image:hover{
+     z-index: 99;
+     height: 21rem;
+     bottom: 1rem;
+    }
+
+          
+/*=======================
+Buttons
+=========================*/
+        
+.bs-product-buttons{         
+  min-width: 100%;
+  clear: left;
+  position: absolute;
+  bottom: 5.5rem;
+  text-align: center;
+  padding: 0.5rem;
+  /*border: solid black 1px;*/
+}
+
+.bs-button{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: #f2f2f2 solid 0.1rem;
+  border-radius: 5%;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  font-size: 1.3rem;
+  font-family: 'Julius Sans One', sans-serif;
+  box-shadow: 0 0.1rem 0.1rem 0 rgba(0,0,0,0.20), 0 0.5rem 0.9rem 0 rgba(0,0,0,0.3);
+}
+
+.btn-no-corners{
+    display: inline-block;
+  clear: both;
+    border: solid;
+    border-radius: 1rem;
+    color: white;
+    margin: 1rem;
+    padding: .7rem 3rem;
+}
+
+
+.bs-more-button{
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border: #f2f2f2 solid 0.1rem;
+  border-radius: 5%;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  font-size: 1.3rem;
+  font-family: 'Julius Sans One', sans-serif;
+  box-shadow: 0 0.1rem 0.1rem 0 rgba(0,0,0,0.20), 0 0.5rem 0.9rem 0 rgba(0,0,0,0.3);
+}
+  
+   /* button:last-child{ 
+    opacity: 0.6;
+    cursor: not-allowed;
+    }*/
+
+  button:hover {
+    transition-duration: 0.4s;
+    background-color: white;
+  }
+    
+.bs-back-button {
+  position: absolute;
+  bottom: 0.2rem;
+  right: 0.2rem;
+}
+
+.bs-download-button {
+ margin: 0.5rem 0 0 0;
+ padding: 0.5rem 1rem;
+ background-color: #002259;
+ color: white;
+}
+
+.bs-download-button:hover {
+  background-color: #0a67ff;
+}
+
+/*=======================
+  Product card back content
+=========================*/ 
+  
+.bs-back-content{
+  display:none;
+  height: 100%;
+}
+
+.bs-description{
+  display: float;
+  padding: 1rem;
+  text-align: start;
+  height: 75%;
+  overflow-y: scroll;
+}  
+          
+          
+/*=======================
+  Price labels
+=========================*/
+          
+.bs-category-cheap{
+  position: absolute;
+  width: 100%;
+  height: 37%;
+  top: 0;
+  background: #9fff70;
+  z-index: -0;
+  opacity: 0.5;            
+}
+
+.bs-category-middle{
+  position: absolute;
+  width: 100%;
+  height: 37%;
+  top: 0;
+  background: #ffff07;
+  z-index: -0;
+  opacity: 0.5;            
+}
+
+.bs-category-expensive{
+  position: absolute;
+  width: 100%;
+  height: 37%;
+  top: 0;
+  background: #ff1111;
+  z-index: -0;
+  opacity: 0.5;            
+}
+
+          
+
+/*=======================
+  Control elements (dropdowns, input fields)
+=========================*/
+   
+    
+.bs-dropdown form *{
+  font-family: 'Julius Sans One', sans-serif;
+  font-size: 1.1rem;
+  padding: 0.3rem;
+  margin: 0.3rem;
+}
+
+.bs-dropdown {
+  display: inline-block;
+  width: 100%;
+  text-align: left;
+}
+
+[type=number] {
+  width: 7rem;
+}
+[type=number]:first-of-type {
+  width: 13rem;
+}
+
+.bs-form {
+  float: left;
+  margin: 0.3rem;
+}
+    
+/*=======================
+  Stats, additional info.
+=========================*/
+    
+.bs-page-stats {
+  position:fixed;
+  bottom: 0;
+  right:0;
+  background-color: #406eb7;
+  color: white;
+  font-family: 'Lato', sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 1rem 1rem 0 1rem;
+  text-align: left;
+  zoom: 0.5;
+}
+
+.bs-load {
+  font-size: 3rem;
+}
+
+.bs-no-product-message {
+  display: none;
+  margin: auto;
+  font-size: 3rem;
+  width: 60%;
+
+}
+
+
+
+/*=======================
+ Animated elements
+=========================*/
+
+
+
+.bs-loader {
+  position: absolute;
+  left: 48.2%;
+  border: 1rem solid #f3f3f3; /* Light grey */
+  border-top: 1rem solid #6e6e6e; /* Dark Grey */
+  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+/*=======================
+  Fonts, Colors, etc.
+=========================*/
