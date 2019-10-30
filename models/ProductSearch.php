@@ -110,8 +110,8 @@ class ProductSearch extends Product
         } elseif ($this->productNameSort == 3) {
             $query->orderBy('price_final DESC');
         } elseif ($this->productNameSort == 4) {
-            //$query->orderBy('price_discounted DESC, price_base DESC');
-            $query->orderBy(['(price_discounted - price_base)'=> SORT_DESC]);
+            $query->orderBy('price_discounted DESC, price_base DESC');
+//            $query->orderBy(['(price_discounted - price_base)'=> SORT_DESC]);
         }
 
         return $query;
