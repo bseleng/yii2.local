@@ -88,10 +88,6 @@ class Product extends ActiveRecord
     }
 
 
-    public function getProductId()
-    {
-        return $this->product_id;
-    }
 
     public function setOrder($productId, $quantity)
     {

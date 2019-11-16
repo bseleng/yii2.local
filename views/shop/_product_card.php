@@ -29,7 +29,7 @@ use yii\base\View;
                 [
                     'class' => ['bs-button', 'buy-button'],
                     'product-id' => $modelProduct->product_id,
-                    'quantity' => 1,
+                    'quantity' => $modelShoppingCart->getProductQuantity(),
                 ]);
             ?>
 
@@ -84,10 +84,6 @@ use yii\base\View;
 $js = <<<JS
 $ (function()
 {
-    alert('ttt');
-    $(".bs-product-card").on('click',".buy-button", function() {
-        alert('rrrrrrr');
-    });
     
 });
 
@@ -95,5 +91,6 @@ JS;
 
 $this->registerJs($js);
 
+//var_dump($_SESSION['order'][78]['quantity']);
 
 ?>

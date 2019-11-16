@@ -57,6 +57,11 @@ class ShopController extends Controller
 
     public function  actionAjaxGetPage()
     {
+        // создаёт объект сессии
+        $session = Yii::$app->session;
+        // открывает сессию
+        $session->open();
+
         $stranichka = Yii::$app->request->get('stranichka');
         $offset = Helper::getOffset($this->limit, $stranichka);
 
@@ -65,11 +70,14 @@ class ShopController extends Controller
 
         $arrModelProduct = $modelProductSearch->search($offset, $this->limit);
 
+        $modelShoppingCart = new ShoppingCart();
+
         foreach ($arrModelProduct as $modelProduct) {
             $newCards[] =($this->renderPartial(
                 '_product_card',
                 [
                     'modelProduct' => $modelProduct,
+                    'modelShoppingCart' => $modelShoppingCart,
                 ])
             );
         }
@@ -110,6 +118,8 @@ class ShopController extends Controller
 
         // в массив сесии order записываем актуальный состав заказа
         $session->set('order',$order);
+
+        return json_encode($order);
 
     }
 
