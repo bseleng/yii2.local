@@ -72,4 +72,13 @@ class Helper
         return $value;
     }
 
+
+    public static function incrementValue($initialValue = 1)
+    {
+        if(isset($initialValue)) {
+            $initialValue++;
+        }
+        return $initialValue;
+    }
+
 }

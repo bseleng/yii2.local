@@ -5,6 +5,7 @@ namespace app\models;
 use \yii\db\ActiveRecord;
 use \yii\BaseYii;
 
+
 class Product extends ActiveRecord
 {
     /**
@@ -84,6 +85,22 @@ class Product extends ActiveRecord
         $imagePath .= '/' . $this->image_path;
 
         return  strtolower($imagePath);
+    }
+
+
+    public function getProductId()
+    {
+        return $this->product_id;
+    }
+
+    public function setOrder($productId, $quantity)
+    {
+        $session['order'] = [
+            'productId' => $productId,
+            'quantity' => $quantity,
+        ];
+
+        return $session;
     }
 
 
