@@ -34,14 +34,12 @@ class ShopController extends Controller
         // или
 //        Yii::warning('debug',  print_r($session->get('order'), true));
 
-
-
         $modelProductSearch = new ProductSearch;
         $modelProduct = new Product;
         $modelShoppingCart = new ShoppingCart();
         $modelProductSearch->load(Yii::$app->request->get());
 
-         $mainPageContent = $this->render(
+        $mainPageContent = $this->render(
             'index',
             [
             'modelProductSearch' => $modelProductSearch,
@@ -51,7 +49,6 @@ class ShopController extends Controller
         );
 
         return $mainPageContent;
-
     }
 
 
@@ -71,6 +68,8 @@ class ShopController extends Controller
         $arrModelProduct = $modelProductSearch->search($offset, $this->limit);
 
         $modelShoppingCart = new ShoppingCart();
+
+
 
         foreach ($arrModelProduct as $modelProduct) {
             $newCards[] =($this->renderPartial(
@@ -135,6 +134,7 @@ class ShopController extends Controller
 
         $modelShoppingCart = new ShoppingCart();
         $modelShoppingCart->orderArr = $order;
+
 
 //        var_dump($modelShoppingCart->getCartProductCount());
 

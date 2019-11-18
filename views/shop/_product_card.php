@@ -29,7 +29,7 @@ use yii\base\View;
                 [
                     'class' => ['bs-button', 'buy-button'],
                     'product-id' => $modelProduct->product_id,
-                    'quantity' => $modelShoppingCart->getProductQuantity(),
+                    'quantity' => 1,
                 ]);
             ?>
 
@@ -91,6 +91,5 @@ JS;
 
 $this->registerJs($js);
 
-//var_dump($_SESSION['order'][78]['quantity']);
-
+////findByPk
 ?>

@@ -99,7 +99,7 @@ use app\components\Helper;
             $(this).closest(".bs-product-card").find("#face-content").show();
         });
         
-        //Набор действий при нажатии на кнопку купить
+        //Набор действий при нажатии на кнопку КУПИТЬ
         // 0) инкремент количества продукта, кнопку которого прожал пользователь
         // 1) пост запос - передача на экшон добавления количества продуктов для каждого ИД
         // 2) гет запрос - получение с экноша показа данных о количестве и ид продуктов
@@ -113,33 +113,8 @@ use app\components\Helper;
             // Количество продукта (текстовое значение)
             var quantity = $(this).attr('quantity');
             
-            //запрос на экшон добавления текущего состава заказа
-            $.ajax(
-            {
-                method: "get",
-                async: false,
-                url: "/shop/ajax-shopping-cart-add",
-            })
-            .done(function(r)
-            {
-                var parsed = JSON.parse(r);
-                // console.log($(this).attr('quantity', parseInt(quantity)+1));
-                
-                //эта часть должна сохранять состав заказа после обновления страницы
-                $.each( parsed, function( key, value ) {
-                    var test = value.productId + " - " + value.quantity + " шт. после обновления";
-                    console.log(test);
-                    $('[product-id="'+value.productId+'"]')
-                        .closest("div")
-                        .find(":button")
-                        .attr('quantity', parseInt(value.quantity));  
-                });                 
-            });
-            
-            
             //Икремент количества продукта, кнопку купить которого, нажал пользователь
             $(this).attr('quantity', parseInt(quantity)+1);
-            
             
             //отправка на экшон добавления ИД и Количества продукта
             $.ajax(
@@ -152,16 +127,22 @@ use app\components\Helper;
                     "quantity": quantity,
                 },
             })
-            //отладка - вывод в консоль
+            //ОТЛАДКА - вывод в консоль
             .done(function( r )
             {
                 consoleText = productId + " - " + quantity + " шт.";
                 console.log(consoleText);
-                // console.log(r);
-                // console.log(quantity);
             });
-
-            // получение с экшон отображения ИД и Количества продукта
+            
+            //показать актуальное состояние корзины  
+            getActualOrder();
+           
+        });
+        
+        //обновляет значение заказа в виджете корзины
+        function getActualOrder()
+        {
+             // получение с экшон отображения ИД и Количества продукта
             $.ajax(
             {
                 method: "get",
@@ -174,7 +155,7 @@ use app\components\Helper;
             {
                 $(".bs-page-stats-count").text(r.productCount);
             });
-        });
+        }
         
         //очистка корзины путём удаления сессии
         //удалить, перезагрузить - пока для отладки
@@ -183,8 +164,12 @@ use app\components\Helper;
              $.ajax(
             {
                 method: "post",
+                async: false,
                 url: "/shop/ajax-shopping-cart-clear",
-            })
+            });
+            
+            //показать актуальное состояние корзины    
+            getActualOrder();
         });
     });    
         

@@ -87,7 +87,11 @@ class Product extends ActiveRecord
         return  strtolower($imagePath);
     }
 
-
+    //так как не могу наследовать свойства шоппингкартом
+    public static function getProductId()
+    {
+        return self::product_id;
+    }
 
     public function setOrder($productId, $quantity)
     {
