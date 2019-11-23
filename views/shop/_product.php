@@ -75,6 +75,9 @@ use app\components\Helper;
         
         //возвращает начальный набор карточек при загрузке
         loadGoods();
+        //проверяет состав заказа
+        getActualOrder();
+        
     
         // отрабатывает по клику кнопки с указанным ID
         //добавляет следующий набор карточек
@@ -100,9 +103,8 @@ use app\components\Helper;
         });
         
         //Набор действий при нажатии на кнопку КУПИТЬ
-        // 0) инкремент количества продукта, кнопку которого прожал пользователь
-        // 1) пост запос - передача на экшон добавления количества продуктов для каждого ИД
-        // 2) гет запрос - получение с экноша показа данных о количестве и ид продуктов
+        // 1) пост запрос - передача на экшон добавления массива с составом заказа
+        // 2) гет запрос - получение с экноша показа данных об общем количестве продуктов
         // 2.1) замена текста в целевом диве полученными данными
         //
         
@@ -112,9 +114,6 @@ use app\components\Helper;
             var productId = $(this).attr('product-id');
             // Количество продукта (текстовое значение)
             var quantity = $(this).attr('quantity');
-            
-            //Икремент количества продукта, кнопку купить которого, нажал пользователь
-            $(this).attr('quantity', parseInt(quantity)+1);
             
             //отправка на экшон добавления ИД и Количества продукта
             $.ajax(
@@ -126,12 +125,6 @@ use app\components\Helper;
                     "productId": productId,
                     "quantity": quantity,
                 },
-            })
-            //ОТЛАДКА - вывод в консоль
-            .done(function( r )
-            {
-                consoleText = productId + " - " + quantity + " шт.";
-                console.log(consoleText);
             });
             
             //показать актуальное состояние корзины  
@@ -143,6 +136,7 @@ use app\components\Helper;
         function getActualOrder()
         {
              // получение с экшон отображения ИД и Количества продукта
+             // проверка наличия состава заказа и скрытие/показ дива с заказом
             $.ajax(
             {
                 method: "get",
@@ -153,8 +147,15 @@ use app\components\Helper;
             //замена текста целевого дива полученными данными
             .done(function( r )
             {
-                $(".bs-page-stats-count").text(r.productCount);
+                $(".bs-page-stats-count").text(r.productTotalCount);
+                $(".bs-page-stats-sum").text(r.productTotalSum);
             });
+            
+            // console.log($(".bs-page-stats-sum").is(':empty'));           
+            if($(".bs-page-stats-count").text() == 0)
+                $('.bs-page-stats').hide();
+            else
+                $('.bs-page-stats').show();
         }
         
         //очистка корзины путём удаления сессии
@@ -171,6 +172,10 @@ use app\components\Helper;
             //показать актуальное состояние корзины    
             getActualOrder();
         });
+        
+        
+
+            
     });    
         
 JS;
@@ -201,8 +206,15 @@ JS;
 
 <div class='bs-page-stats'>
 
-  <div class='bs-page-stats-count'></div>
-  <div class='bs-page-stats-sum'> На сумму: 111890 руб.</div>
+  <div>
+      <span class='bs-page-stats-count-text'> <?=$modelShoppingCart->productCountText?></span>
+      <span class='bs-page-stats-count'></span>
+  </div>
+
+  <div>
+      <span class='bs-page-stats-sum-text'><?=$modelShoppingCart->productPriceText?> </span>
+      <span class='bs-page-stats-sum'></span>
+  </div>
 
   <?= Html::a(Html::encode('Очистить корзину', true), null,
     [

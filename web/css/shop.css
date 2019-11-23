@@ -350,6 +350,7 @@ Buttons
   padding: 1rem 1rem 1rem 1rem;
   text-align: left;
   width: 25rem;
+  display: none;
 }
 
 .bs-load {

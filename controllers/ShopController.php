@@ -96,30 +96,24 @@ class ShopController extends Controller
         $session = Yii::$app->session;
         // открывает сессию
         $session->open();
-
         // создаёт объект зароса
         $request = Yii::$app->request;
-        // ИД продукта в БД
-        $productId = $request->post('productId');
-        // количество товара накликанное пользователем
-        $quantity = $request->post('quantity');
 
-        // получаем массив состава заказа записываем в переменную order
-        $order = $session->get('order');
+        //создаёт модель корзины ShoppingCart
+        $modelShoppingCart = new ShoppingCart();
+        // получает массив состава заказа из сессии и передаёт его в модель
+        $modelShoppingCart->orderArr = $session->get('order');
+        // получает ИД продукта (согласно БД) из сессии и передаёт его в модель
+        $modelShoppingCart->productId = $request->post('productId');
+        // получает количество продукта из сессии и передаёт его в модель
+        $modelShoppingCart->productQuantity = $quantity = $request->post('quantity');
+        // добавляет товары в массив заказа на основании данных пост запроса
+        $order = $modelShoppingCart->addProduct();
 
-        // в подмассив заказа ключу $productId присваеваем
-        // актуальный (последний кликнутый) ИД продукта и накликаное количество
-        $order[$productId] =
-            [
-                'productId' => $productId,
-                'quantity' => $quantity,
-            ];
-
-        // в массив сесии order записываем актуальный состав заказа
+        // записывает обновлённый массив заказа в сессию
         $session->set('order',$order);
 
         return json_encode($order);
-
     }
 
     public function actionAjaxShoppingCartShow()
@@ -129,20 +123,13 @@ class ShopController extends Controller
         // открывает сессию
         $session->open();
 
-        // получаем массив состава заказа записываем в переменную order
-        $order = $session->get('order');
-
+        //создаёт модель корзины ShoppingCart
         $modelShoppingCart = new ShoppingCart();
-        $modelShoppingCart->orderArr = $order;
+        // получает массив состава заказа из сессии и передаёт его в модель
+        $modelShoppingCart->orderArr = $session->get('order');
 
-
-//        var_dump($modelShoppingCart->getCartProductCount());
-
-        return json_encode([
-            'productCount' => $modelShoppingCart->getCartProductCount(),
-//            'quantity' => $quantity,
-
-        ]);
+       // return json_encode($modelShoppingCart->getCartProductCount());
+        return $modelShoppingCart->getShoppingCartValues();
     }
 
     public function actionAjaxShoppingCartClear()
