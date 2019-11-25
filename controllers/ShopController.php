@@ -13,6 +13,7 @@ use yii\web\Request;
 use yii\helpers\VarDumper;
 
 
+
 class ShopController extends Controller
 {
     // выводимое количество товаров
@@ -90,6 +91,9 @@ class ShopController extends Controller
         ]);
     }
 
+    /**
+     * @return string
+     */
     public function actionAjaxShoppingCartAdd()
     {
         // создаёт объект сессии
@@ -103,12 +107,13 @@ class ShopController extends Controller
         $modelShoppingCart = new ShoppingCart();
         // получает массив состава заказа из сессии и передаёт его в модель
         $modelShoppingCart->orderArr = $session->get('order');
-        // получает ИД продукта (согласно БД) из сессии и передаёт его в модель
-        $modelShoppingCart->productId = $request->post('productId');
-        // получает количество продукта из сессии и передаёт его в модель
-        $modelShoppingCart->productQuantity = $quantity = $request->post('quantity');
+        // получает ИД продукта (согласно БД) из сессии
+        $productId = $request->post('productId');
+        // получает количество продукта из сессии
+        $quantity= $quantity = $request->post('quantity');
         // добавляет товары в массив заказа на основании данных пост запроса
-        $order = $modelShoppingCart->addProduct();
+        $order = $modelShoppingCart->addProduct($productId, $quantity);
+
 
         // записывает обновлённый массив заказа в сессию
         $session->set('order',$order);

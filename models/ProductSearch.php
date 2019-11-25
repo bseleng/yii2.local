@@ -7,6 +7,7 @@ use \yii\db\Query;
 use Yii;
 use app\components\Helper;
 
+
 class ProductSearch extends Product
 {
     public $productNameSort;

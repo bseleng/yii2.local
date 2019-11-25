@@ -26,7 +26,10 @@ use app\components\Helper;
     //записываем ГЕТ параметры (бренд, направление сортировки) в ДЖЕЙСОН
     $productSearchParams = json_encode($_GET);
 
+
+
     $js = <<<JS
+    var productSearchParams = {$productSearchParams};
     $(function() 
     {
         //загружает пачку товаров  с текущего нзначения страницы (pageValue)

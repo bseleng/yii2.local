@@ -13,66 +13,56 @@ class ShoppingCart extends ProductSearch
     public $productPriceText = 'На сумму: ';
     // array массив состава заказа 'order' из сессии
     public $orderArr;
-    // array массив со значением ИД продукта 'productId' из сессии
-    public $productId;
-    // array массив со значением количества продукта 'quantity' из сессии
-    public $productQuantity;
-
-//    $modelShoppingCart->productQuantity = $_SESSION['order'][$modelShoppingCart->product_id]['quantity'];
-
 
     /**
      * возвращает актуальное количество позиций в заказе
      * @return string возвращает актуальное количество позиций в заказе
      */
-    public function getCartProductCount()
+    protected function getCartProductCount()
     {
         if(!$this->orderArr) {
             return 0;
         } else {
-            return array_sum(array_column($this->orderArr, 'quantity'));
+            return array_sum($this->orderArr);
         }
     }
 
     /**
-     * проверяет есть ли в массиве заказа позиция с укзанным ИД продукта
+     * добавляет переданное количество указанной позиции в заказ
+     * и возвращает актуализированный массив заказа
+     *
+     * проверяет есть ли в массиве заказа  укзанный ИД продукта
      *     если нет - добавляет массив в формате ["ИД"] => количество, согласно количества в пост запросе
      *     если да - увеличивает количество требуемого ИД на количество, согласно количества в пост запросе
-     * возвращает обновленный массив заказа
+     * возвращает актуализированный массив заказа
      *
-     * @return array обновлённый массив заказа 'order' из сессии
+     * @param $productId int значение ИД продукта из БД отправляемое пост запросом
+     * @param $quantity int значение количества соответствующего ИД продукта отправляемое пост запросом
+     * @return array актуализированный массив заказа 'order'
      */
-    public function addProduct()
+    public function addProduct($productId, $quantity)
     {
-        if(!isset($this->orderArr[$this->productId]['quantity'])){
-            $this->orderArr[$this->productId] =
-                [
-                    'productId' => $this->productId,
-                    'quantity' => $this->productQuantity,
-                ];
-        } else {
-            $this->orderArr[$this->productId] =
-                [
-                    'productId' => $this->productId,
-                    'quantity' => $this->orderArr[$this->productId]['quantity'] + $this->productQuantity,
-                ];
+        if(isset($this->orderArr[$productId])) {
+            $quantity = $this->orderArr[$productId] + $quantity;
         }
+
+        $this->orderArr[$productId] = $quantity;
 
         return $this->orderArr;
 
-
-        //старый вариант
-        /*        $order[$productId] =
-            [
-                'productId' => $productId,
-                'quantity' => $quantity,
-            ];*/
     }
 
     /**
-     * @return array
+     * возвращает массив в формате ["ИД продукта"] => цена из БД, на основании состава заказа
+     *
+     * делает запрос в БД, выбирает доп столбец с финальной ценой
+     * делает массив из ИД продуктов, на основании состава заказа
+     * выбирает записи из БД с ИД продуктов из состава заказа
+     * формирует массив актуальный цен согласно состава заказа
+     *
+     * @return array массив в формате ["ИД продукта"] => цена из БД, на основании состава заказа
      */
-    public function getProductPricesArr()
+    protected function getProductPricesArr()
     {
         $query = $this->find();
         $query->select([
@@ -84,36 +74,36 @@ class ShoppingCart extends ProductSearch
             AS price_final'
         ]);
 
-        if(!$this->orderArr) {
-            $productPricesArr = [];
 
-        } else {
-            $idArr = (array_column($this->orderArr, 'productId'));
-            $query->andWhere(['product_id' => $idArr]);
-            $arrModelShoppingCart = $query->all();
+        $idArr = (array_keys($this->orderArr));
+        $query->andWhere(['product_id' => $idArr]);
+        $arrModelShoppingCart = $query->all();
 
-            foreach ($arrModelShoppingCart as $key => $field) {
-                $productPricesArr[$field["product_id"]] = $field["price_final"];
-
-            }
+        foreach ($arrModelShoppingCart as $key => $field) {
+            $productPricesArr[$field["product_id"]] = $field["price_final"];
         }
-
 
         return $productPricesArr;
     }
 
 
     /**
-     * @return float|int
+     * возвращает сумму всех цен позиций в заказе
+     *
+     * если массив заказа пуст - возвращает 0
+     * иначе проходит по всему заказу умножая цену каждого ИД продукта на количество этого продукта
+     *
+     * @return float|int сумма всех цен позиций в заказе
      */
-    public function getCartProductPrices()
+    protected function getCartProductPrices()
     {
+        $cartProductPrices = 0;
 
-        if(empty($this->getProductPricesArr())) {
-            $cartProductPrices = 0;
+        if(!$this->orderArr) {
+            return $cartProductPrices;
         } else {
-            foreach ($this->orderArr as $productId => $targetArr) {
-                $cartProductPrices += $targetArr['quantity'] * $this->getProductPricesArr()[$productId];
+            foreach ($this->orderArr as $productId => $quantity) {
+                $cartProductPrices += $quantity * $this->getProductPricesArr()[$productId];
             }
         }
 
@@ -122,6 +112,8 @@ class ShoppingCart extends ProductSearch
 
 
     /**
+     * возвращает строку закодированую в JSON с общим количеством и ценой продуктов в заказе
+     *
      * @return string
      */
     public function getShoppingCartValues()
@@ -132,10 +124,7 @@ class ShoppingCart extends ProductSearch
                 'productTotalSum' => $this->getCartProductPrices(),
             ]
         );
-
     }
-
-
 
 }
 
