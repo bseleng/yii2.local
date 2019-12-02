@@ -25,15 +25,7 @@ class ShopController extends Controller
         $session = Yii::$app->session;
         // открывает сессию
         $session->open();
-        
-        //отладка: уничтожение сессии и печать массива order
-//        $session->destroy();
-//        print_r($session->get('order'));
 
-        //модная отладка
-        Yii::warning('debug',  VarDumper::dumpAsString($session->get('order')));
-        // или
-//        Yii::warning('debug',  print_r($session->get('order'), true));
 
         $modelProductSearch = new ProductSearch;
         $modelProduct = new Product;
@@ -55,11 +47,6 @@ class ShopController extends Controller
 
     public function  actionAjaxGetPage()
     {
-        // создаёт объект сессии
-        $session = Yii::$app->session;
-        // открывает сессию
-        $session->open();
-
         $stranichka = Yii::$app->request->get('stranichka');
         $offset = Helper::getOffset($this->limit, $stranichka);
 
@@ -91,47 +78,52 @@ class ShopController extends Controller
         ]);
     }
 
-    /**
-     * @return string
-     */
     public function actionAjaxShoppingCartAdd()
     {
-        // создаёт объект сессии
-        $session = Yii::$app->session;
-        // открывает сессию
-        $session->open();
+
         // создаёт объект зароса
         $request = Yii::$app->request;
+        // получает ИД продукта (согласно БД) и отправляет пост запросом
+        $productId = $request->post('productId');
+        // получает количество продукта и отправляет пост запросом
+        $quantity = $quantity = $request->post('quantity');
+
+        // получение коллекции кук (yii\web\CookieCollection) из компонента "request"
+        $cookies = Yii::$app->request->cookies;
 
         //создаёт модель корзины ShoppingCart
         $modelShoppingCart = new ShoppingCart();
-        // получает массив состава заказа из сессии и передаёт его в модель
-        $modelShoppingCart->orderArr = $session->get('order');
-        // получает ИД продукта (согласно БД) из сессии
-        $productId = $request->post('productId');
-        // получает количество продукта из сессии
-        $quantity= $quantity = $request->post('quantity');
+
+        // получает массив состава заказа из кук и передаёт его в модель
+         $modelShoppingCart->orderArr = $cookies->getValue('order');
+
         // добавляет товары в массив заказа на основании данных пост запроса
         $order = $modelShoppingCart->addProduct($productId, $quantity);
 
+        // получение коллекции (yii\web\CookieCollection) из компонента "response"
+        $cookies = Yii::$app->response->cookies;
+        // добавление новой куки в HTTP-ответ
+        $cookies->add(new \yii\web\Cookie([
+            'name' => 'order',
+            'value' => $order,
 
-        // записывает обновлённый массив заказа в сессию
-        $session->set('order',$order);
+        ]));
 
-        return json_encode($order);
+
+
+
+        return json_encode($cookies->getValue('order'));
     }
 
     public function actionAjaxShoppingCartShow()
     {
-        // создаёт объект сессии
-        $session = Yii::$app->session;
-        // открывает сессию
-        $session->open();
+        // получение коллекции кук (yii\web\CookieCollection) из компонента "request"
+        $cookies = Yii::$app->request->cookies;
 
         //создаёт модель корзины ShoppingCart
         $modelShoppingCart = new ShoppingCart();
         // получает массив состава заказа из сессии и передаёт его в модель
-        $modelShoppingCart->orderArr = $session->get('order');
+        $modelShoppingCart->orderArr = $cookies->getValue('order');
 
        // return json_encode($modelShoppingCart->getCartProductCount());
         return $modelShoppingCart->getShoppingCartValues();
@@ -139,12 +131,12 @@ class ShopController extends Controller
 
     public function actionAjaxShoppingCartClear()
     {
-        // создаёт объект сессии
-        $session = Yii::$app->session;
-        // открывает сессию
-        $session->open();
-        //уничтожает сессию
-        return $session->destroy();
+
+        // получение коллекции (yii\web\CookieCollection) из компонента "response"
+        $cookies = Yii::$app->response->cookies;
+
+        // удаление куки...
+        return  $cookies->remove('order');
 
     }
 }

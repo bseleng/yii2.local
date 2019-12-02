@@ -12,7 +12,7 @@ class ShoppingCart extends ProductSearch
     //string строка в виджете корзины перед значением суммы цен количества товаров
     public $productPriceText = 'На сумму: ';
     // array массив состава заказа 'order' из сессии
-    public $orderArr;
+    public $orderArr = [];
 
     /**
      * возвращает актуальное количество позиций в заказе
@@ -49,6 +49,10 @@ class ShoppingCart extends ProductSearch
         $this->orderArr[$productId] = $quantity;
 
         return $this->orderArr;
+
+
+
+
 
     }
 
