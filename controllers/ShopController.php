@@ -109,9 +109,6 @@ class ShopController extends Controller
 
         ]));
 
-
-
-
         return json_encode($cookies->getValue('order'));
     }
 

@@ -49,11 +49,6 @@ class ShoppingCart extends ProductSearch
         $this->orderArr[$productId] = $quantity;
 
         return $this->orderArr;
-
-
-
-
-
     }
 
     /**
