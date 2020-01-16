@@ -11,15 +11,14 @@ class DefaultController extends Controller
     //открывает стартовую страницу
     public function actionIndex()
     {
-
         return $this->render('index');
     }
 
     //открывает страницу входа в учётную запись
     //даёт возможность войти в учётную запись
+    # НЕПОНЯТНО как её сделать недоступной для гостя
     public function actionLogin()
     {
-        $this->layout = 'main2';
         if (!Yii::$app->userAdmin->isGuest) {
             return $this->redirect(['index']);
         }
@@ -44,26 +43,40 @@ class DefaultController extends Controller
     //производит выход из учётной записи
     public function actionLogout()
     {
-        $this->layout = 'main2';
         Yii::$app->userAdmin->logout();
 
         return $this->redirect(['login']);
     }
 
-    //открывает страницу для пользвателей
+    //открывает страницу для пользвателей выполнивших вход (на данный момент страница для ГридВью)
     public function actionSecret()
     {
-        return $this->render('secret');
+        $modelProduct = new \app\models\Product;
+        return $this->render('secret', [
+            'modelProduct' => $modelProduct,
+        ]);
     }
 
+    //открывает страницу с информацией
     public function actionInfo()
     {
         return $this->render('info');
     }
-
+    //открывает страницк контактов
     public function actionContact()
     {
         return $this->render('contact');
+    }
+    //открывает страницу для редактирования конкретной записи из модели
+    public function actionEdit()
+    {
+        $modelProduct = new \app\models\Product;
+        return $this->render(
+            'edit',
+            [
+                'modelProduct' => $modelProduct,
+            ]
+        );
     }
 
 }
