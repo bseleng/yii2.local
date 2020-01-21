@@ -15,21 +15,14 @@ class DefaultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['update', 'login', 'secret'],
+                'only' => ['update', 'secret'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['login',],
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'allow' => true,
-                        'actions' => ['update', 'secret'],
+                        'actions' => ['update', 'secret',],
                         'roles' => ['@'],
                     ],
                 ],
-//                'user' => $this->userAdmin,
-
             ],
         ];
     }
