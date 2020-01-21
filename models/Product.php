@@ -8,6 +8,14 @@ use \yii\BaseYii;
 
 class Product extends ActiveRecord
 {
+    public function rules()
+    {
+        return [
+            //
+            [['product_name', 'product_description', 'image_path',], 'string'],
+            [['price_base', 'price_discounted', 'brand_id',], 'integer'],
+        ];
+    }
     /**
      * @inheritdoc
      */

@@ -27,6 +27,8 @@ $config = [
             'class' => 'yii\web\User',
             'identityClass' => 'app\modules\admin\models\UserAdmin',
             'enableAutoLogin' => true,
+            # НЕ РАБОТАЕТ В КОНФИГЕ!
+//            'loginUrl' => ['/admin/default/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

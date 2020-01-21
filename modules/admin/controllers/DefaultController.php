@@ -4,10 +4,36 @@ namespace app\modules\admin\controllers;
 
 use yii\web\Controller;
 use Yii;
-//use app\modules\admin\models\LoginForm;
+use \app\models\Product;
+use yii\filters\AccessControl;
 
 class DefaultController extends Controller
 {
+    //правила доступа
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['update', 'login', 'secret'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['login',],
+                        'roles' => ['?'],
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['update', 'secret'],
+                        'roles' => ['@'],
+                    ],
+                ],
+//                'user' => $this->userAdmin,
+
+            ],
+        ];
+    }
+
     //открывает стартовую страницу
     public function actionIndex()
     {
@@ -68,11 +94,42 @@ class DefaultController extends Controller
         return $this->render('contact');
     }
     //открывает страницу для редактирования конкретной записи из модели
-    public function actionEdit()
+    public function actionUpdate($id)
     {
-        $modelProduct = new \app\models\Product;
+        $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
+        if ($modelProduct->load(\Yii::$app->request->post())) {
+            $modelProduct->save();
+        }
         return $this->render(
-            'edit',
+            'update',
+            [
+                'modelProduct' => $modelProduct,
+            ]
+        );
+    }
+
+    public function actionCreate()
+    {
+        $modelProduct = new Product;
+        if ($modelProduct->load(\Yii::$app->request->post())) {
+            $modelProduct->save();
+        }
+        return $this->render(
+            'update',
+            [
+                'modelProduct' => $modelProduct,
+            ]
+        );
+    }
+    public function actionDelete($id)
+    {
+        $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
+        $modelProduct->delete();
+        if ($modelProduct->load(\Yii::$app->request->post())) {
+            $modelProduct->save();
+        }
+        return $this->render(
+            'secret',
             [
                 'modelProduct' => $modelProduct,
             ]
