@@ -68,6 +68,9 @@ $config = [
                'product' => [
                    'class' => 'app\modules\admin\modules\product\ProductModule',
                ],
+                'brand' => [
+                    'class' => 'app\modules\admin\modules\brand\BrandModule',
+                ],
             ],
         ],
     ],

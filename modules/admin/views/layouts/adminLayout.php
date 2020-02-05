@@ -13,7 +13,6 @@ use app\assets\AppAsset;
 AppAsset::register($this);
 ?>
 
-<?php $this->context->layout = 'main2'; ?>
 
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -42,7 +41,8 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/admin/default/index']],
-            ['label' => 'Secret', 'url' => ['/admin/default/secret']],
+            ['label' => 'Product', 'url' => ['/admin/product/default/index']],
+            ['label' => 'Brand', 'url' => ['/admin/brand/default/index']],
             ['label' => 'About', 'url' => ['/admin/default/info']],
             ['label' => 'Contact', 'url' => ['/admin/default/contact']],
             Yii::$app->userAdmin->isGuest ? (
