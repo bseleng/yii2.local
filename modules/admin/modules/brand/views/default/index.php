@@ -11,7 +11,7 @@ use yii\bootstrap\Button;
 ?>
 
 <div class="row">
-    <?= Html::a('Создать бренд', ['default/update'],
+    <?= Html::a('Создать бренд', ['default/create'],
         ['class'=>'
             btn btn-primary ',
             'style' => '

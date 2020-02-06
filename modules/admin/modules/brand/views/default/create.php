@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 ?>
 
-<h3> Редактировать название Бренда</h3>
+<h3> Создать Бренд</h3>
 
 <!--Текстовый ввод для бренда-->
 <?=$this->render('_brand_form', ['modelBrand' => $modelBrand,]); ?>

@@ -1,5 +1,4 @@
 <?php
-use yii\widgets\DetailView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -7,68 +6,19 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 ?>
 <!--модальное окно из бутстрап-->
-<?php $formBrand = ActiveForm::begin([
-    'id' => 'brand-form',
-    'options' => ['class' => 'form-horizontal'],
-]); ?>
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
-<!-- Trigger the modal with a button -->
-<?= Html::a('Добавить бренд',
-    ['#',], [
-            'class' => 'btn btn-info btn-lg',
-            'data-toggle' => 'modal',
-            'data-target'=> '#brandModal'
-    ])
-?>
 <!-- Modal -->
 <div id="brandModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-<!--        ['/admin/brand/default/update',]-->
-        <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
-            </div>
-            <div class="modal-body">
-                <p>Some text in the modal.</p>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
-
     </div>
 </div>
-<?php ActiveForm::end(); ?>
 <!--Yii2 activeForm AJAX send-->
 
 <?php $form = ActiveForm::begin([
     'id' => 'product-form',
 ]); ?>
 
-<form>
     <div class="form-row clearfix">
         <div class="form-group col-md-6">
             <!--  Поле ввода наименование продукта           -->
@@ -89,26 +39,23 @@ use yii\bootstrap\Modal;
                     ->hint('Бренд продукта, который видит конечный пользователь')
                     ->label('Бренд продукта')
                 ?>
+                <!-- Trigger the modal with a button -->
                 <!--Кнопка добавления бренда-->
                 <span class="input-group-btn">
-                    <?php
-                    Modal::begin([
-                        'header' => '<h2>Введите название нового бренда</h2>',
-                        'toggleButton' => [
-                            'label' => 'Добавить бренд',
-                            'class' => 'btn btn-outline-secondary',
+                    <?= Html::a('Добавить бренд',
+                        ['/admin/product/default/create-brand',], [
+                            'data-toggle' => 'modal',
+                            'data-target'=> '#brandModal',
+                            'class' => 'btn btn-info',
+                            'role'=>"button",
                             'style' => '
                                 margin-bottom:1rem;
                                 font-size: 1.4rem;
                                 border-radius: 0 0.3rem 0.3rem 0;
+                                background-color: #b6b6b6;
+                                border-color: #b6b6b6;
                             '
-                        ],
-                        'footer' => 'добавление бренда',
-//                        'url' => Url::to(['/admin/product/default/create']),
-                    ]);
-
-
-                    Modal::end();
+                        ])
                     ?>
                 </span>
             </div>
@@ -166,6 +113,6 @@ use yii\bootstrap\Modal;
             'value' => 'SaveExitBtn',
 //        url
     ]) ?>
-</form>
 
 <?php ActiveForm::end(); ?>
+

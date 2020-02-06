@@ -77,6 +77,7 @@ echo  GridView::widget([
                     'alt'=>'изображение '. $data->product_name,
                     'style' => 'width:5rem;'
                 ]);
+
             },
         ],
         [

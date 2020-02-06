@@ -48,17 +48,14 @@ class DefaultController extends Controller
      * @param string|int $id идентификатор товара из БД, либо слово new для создания нового
      * @return string представление редактирования товара
      */
-    public function actionUpdate($id = 'new')
+    public function actionUpdate($id)
     {
-        if ($id !== 'new') {
-            $modelBrand = Brand::find()->where('brand_id = :id', [':id' => $id])->one();
-        } else {
-            $modelBrand = new Brand;
-        }
+        $modelBrand = Brand::find()->where('brand_id = :id', [':id' => $id])->one();
 
         $request = Yii::$app->request;
         if ($modelBrand->load($request->post())) {
             $modelBrand->save();
+            $this->redirect(['index']);
         }
         return $this->render(
             'update',
@@ -76,6 +73,23 @@ class DefaultController extends Controller
         if (!Yii::$app->request->isAjax) {
             return $this->redirect(['index']);
         }
+    }
+
+    public function actionCreate()
+    {
+        $modelBrand = new Brand;
+
+        $request = Yii::$app->request;
+        if ($modelBrand->load($request->post())) {
+            $modelBrand->save();
+            $this->redirect(['index']);
+        }
+        return $this->render(
+            'create',
+            [
+                'modelBrand' => $modelBrand,
+            ]
+        );
     }
 
 

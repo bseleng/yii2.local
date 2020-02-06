@@ -4,6 +4,7 @@ namespace app\modules\admin\modules\product\controllers;
 
 use yii\web\Controller;
 use \app\models\Product;
+use \app\models\Brand;
 use yii\filters\AccessControl;
 use Yii;
 
@@ -81,6 +82,23 @@ class DefaultController extends Controller
         if (!Yii::$app->request->isAjax) {
             return $this->redirect(['index']);
         }
+    }
+
+    public function  actionCreateBrand()
+    {
+        $modelBrand = new Brand;
+        $request = Yii::$app->request;
+        if ($modelBrand->load($request->post())) {
+            $modelBrand->save();
+            $this->redirect(['update']);
+        }
+
+        return $this->renderPartial(
+            'create_brand',
+            [
+                'modelBrand' => $modelBrand,
+            ]
+        );
     }
 
 }
