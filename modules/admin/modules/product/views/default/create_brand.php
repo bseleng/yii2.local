@@ -29,7 +29,20 @@ use yii\helpers\ArrayHelper;
             'class' => 'btn btn-primary',
             'style'=> 'float:right; margin:3rem 5rem 0 0;',
             'name' => 'SaveBtn',
+            'onclick' => "console.log('Работает!');",
     ]) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
+
+
+<?php
+    $js = <<<JS
+     $('#brand-form').on('beforeSubmit', function(){
+     console.log('Работает!');
+     return false;
+     });
+JS;
+
+    $this->registerJs($js);
+?>

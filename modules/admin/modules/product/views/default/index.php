@@ -11,7 +11,7 @@ use yii\bootstrap\Button;
 ?>
 
 <div class="row">
-    <?= Html::a('Создать карточку продукта', ['default/update'],
+    <?= Html::a('Создать карточку продукта', ['default/create'],
         ['class'=>'
             btn btn-primary ',
             'style' => '

@@ -49,13 +49,9 @@ class DefaultController extends Controller
      * @param string|int $id идентификатор товара из БД, либо слово new для создания нового
      * @return string представление редактирования товара
      */
-    public function actionUpdate($id = 'new')
+    public function actionUpdate($id)
     {
-        if ($id !== 'new') {
-            $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
-        } else {
-            $modelProduct = new Product;
-        }
+        $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
 
         $request = Yii::$app->request;
         if ($modelProduct->load($request->post())) {
@@ -73,6 +69,29 @@ class DefaultController extends Controller
             ]
         );
     }
+
+    public function actionCreate()
+    {
+        $modelProduct = new Product;
+
+        $request = Yii::$app->request;
+        if ($modelProduct->load($request->post())) {
+            $modelProduct->save();
+            //если передан ЕХИТ то редирект $_GET[]
+            if ($request->post('SaveExitBtn')) {
+                $this->redirect(['index']);
+            }
+        }
+
+        return $this->render(
+            'update',
+            [
+                'modelProduct' => $modelProduct,
+            ]
+        );
+    }
+
+
 
     //удаление записи с указанным ИД
     public function actionDelete($id)
