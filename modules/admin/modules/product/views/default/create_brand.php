@@ -23,13 +23,13 @@ use yii\helpers\ArrayHelper;
             ->hint('Наименование бренда, которое видит конечный пользователь')
             ->label('Наименование бренда');
         ?>
-</div>
-<!--Кнопка сохранения изменений в модель    -->
-<?= Html::submitButton('Сохранить', [
-        'class' => 'btn btn-primary',
-        'style'=> 'float:right; margin:3rem 5rem 0 0;',
-        'name' => 'SaveBtn'
-]) ?>
+    </div>
+    <!--Кнопка сохранения изменений в модель    -->
+    <?= Html::submitButton('Сохранить', [
+            'class' => 'btn btn-primary',
+            'style'=> 'float:right; margin:3rem 5rem 0 0;',
+            'name' => 'SaveBtn',
+    ]) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
