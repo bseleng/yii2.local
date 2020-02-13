@@ -1,15 +1,20 @@
 <?php
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use yii\helpers\ArrayHelper;
+use \yii\widgets\Pjax;
 ?>
 
-<?php $form= ActiveForm::begin([
+<?php Pjax::begin(['id' => 'my-pjax']); ?>
+<?php
+
+$form = ActiveForm::begin([
     'id' => 'brand-form',
-    'options' => ['class' => 'form-group'],
+    'options' => ['class' => 'form-group', 'data-pjax' => true],
     'action' => 'create-brand',
-]); ?>
+]);
+
+
+?>
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -25,24 +30,13 @@ use yii\helpers\ArrayHelper;
         ?>
     </div>
     <!--Кнопка сохранения изменений в модель    -->
+<!--    AJAX-->
     <?= Html::submitButton('Сохранить', [
             'class' => 'btn btn-primary',
             'style'=> 'float:right; margin:3rem 5rem 0 0;',
             'name' => 'SaveBtn',
-            'onclick' => "console.log('Работает!');",
     ]) ?>
 </div>
 
 <?php ActiveForm::end(); ?>
-
-
-<?php
-    $js = <<<JS
-     $('#brand-form').on('beforeSubmit', function(){
-     console.log('Работает!');
-     return false;
-     });
-JS;
-
-    $this->registerJs($js);
-?>
+<?php Pjax::end(); ?>

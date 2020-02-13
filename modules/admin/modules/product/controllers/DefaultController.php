@@ -2,6 +2,8 @@
 
 namespace app\modules\admin\modules\product\controllers;
 
+use app\modules\admin\modules\product\models\UploadFile;
+use yii\web\UploadedFile;
 use yii\web\Controller;
 use \app\models\Product;
 use \app\models\Brand;
@@ -40,13 +42,13 @@ class DefaultController extends Controller
      * открывает представление редактирования товара
      *
      * проверяет $id,
-     *      если не передан - устанавливает new по умолчанию
      *      если передан - находит соответствующий товар в БД по ИД
      * проверяет данные ПОСТ запроса
      *      если запрос не пустой - сохраняет данные в модель
-     *      если запрос содержит значение кнопки СОХРАНИТЬ И ВЫЙТИ - возвращает в стандартное представление модуля ПРОДУКТ (список)
+     *      если запрос содержит значение кнопки СОХРАНИТЬ И ВЫЙТИ
+     *          - возвращает в стандартное представление модуля ПРОДУКТ (список)
      *
-     * @param string|int $id идентификатор товара из БД, либо слово new для создания нового
+     * @param int $id идентификатор товара из БД
      * @return string представление редактирования товара
      */
     public function actionUpdate($id)
@@ -70,6 +72,16 @@ class DefaultController extends Controller
         );
     }
 
+    /**
+     * открывает представление создания товара
+     *
+     * проверяет данные ПОСТ запроса
+     *      если запрос не пустой - сохраняет данные в модель
+     *      если запрос содержит значение кнопки СОХРАНИТЬ И ВЫЙТИ
+     *          - возвращает в стандартное представление модуля ПРОДУКТ (список)
+     *
+     * @return string представление список товаров
+     */
     public function actionCreate()
     {
         $modelProduct = new Product;
@@ -103,13 +115,22 @@ class DefaultController extends Controller
         }
     }
 
+    /**
+     * открывает представление добавления бренда в модальном окне
+     *
+     * проверяет данные ПОСТ запроса, если не пустой - сохраняет данные в модель
+     *
+     * @return string модальное окно добавления бренда
+     */
     public function  actionCreateBrand()
     {
         $modelBrand = new Brand;
         $request = Yii::$app->request;
-        if ($modelBrand->load($request->post())) {
-            $modelBrand->save();
-            $this->redirect(['update']);
+        if ($modelBrand->load($request->post()) && $modelBrand->save()) {
+            if ($request->isPjax) {
+
+                $this->redirect(['update']);
+            }
         }
 
         return $this->renderPartial(
@@ -118,6 +139,24 @@ class DefaultController extends Controller
                 'modelBrand' => $modelBrand,
             ]
         );
+
+    }
+
+    //стандартное действие загрузки файла из документации
+    public function actionUpload()
+    {
+        $model = new UploadFile();
+
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
+                // file is uploaded successfully
+                $this->redirect(['upload']);
+                return;
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
     }
 
 }

@@ -68,7 +68,6 @@ echo  GridView::widget([
         [
             //колонка изображения продукта
             'label' => 'Product Image',
-            # НЕПОНЯТНО! почему такой формат
             'format' => 'raw',
             'value' => function($data)
             {
@@ -87,17 +86,10 @@ echo  GridView::widget([
             'options' => ['style' => 'width:5rem'],
             // кнопки изменения, удаления
             'template' => '{update} {delete}',
-            // УРЛ для редактирования конкретной записи модели
-            /*'urlCreator' => function($action, $model, $key, $index)
-            {
-                if ($action === 'update') {
-                    return  ['update','id'=>$model->product_id,];
-                } if ($action === 'delete') {
-                return ['delete', 'id' => $model->product_id,];
-            }
-//                return ['update','id'=>$model->product_id,];
-            },*/
             'buttons' => [
+
+### НЕПОНЯТНО в принципе как  это работает
+
                 'delete' => function ($url) {
                     return Html::a('<span class="glyphicon glyphicon-trash"></span>', '#', [
                         'title' => 'Удалить',

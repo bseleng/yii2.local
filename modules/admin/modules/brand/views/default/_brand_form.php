@@ -6,19 +6,17 @@ use yii\widgets\ActiveForm;
 <?php
 $request = Yii::$app->request;
 if ($request->get('id')) {
-    $form = ActiveForm::begin([
-        'id' => 'brand-form',
-        'options' => ['class' => 'form-group'],
-        'action' => 'update?id=' . $modelBrand->brand_id,
-    ]);
+    $action = 'update?id=' . $modelBrand->brand_id;
 } else {
-    $form = ActiveForm::begin([
-        'id' => 'brand-form',
-        'options' => ['class' => 'form-group'],
-        'action' => 'create',
-    ]);
-
+    $action = 'create';
 }
+$form = ActiveForm::begin([
+    'id' => 'brand-form',
+    'options' => ['class' => 'form-group'],
+    'action' => $action,
+]);
+
+
  ?>
     <div class="form-row clearfix">
         <div class="form-group col-md-8" style='margin-top: 1rem;'>

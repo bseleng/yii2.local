@@ -4,6 +4,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
+use \yii\widgets\Pjax;
 ?>
 <!--модальное окно из бутстрап-->
 <!-- Modal -->
@@ -17,6 +18,7 @@ use yii\bootstrap\Modal;
 
 <?php $form = ActiveForm::begin([
     'id' => 'product-form',
+    'options' => ['enctype' => 'multipart/form-data'],
 ]); ?>
 
     <div class="form-row clearfix">
@@ -97,6 +99,7 @@ use yii\bootstrap\Modal;
                 class=""
             >
             <?= $form->field($modelProduct, 'image_path')->fileInput(); ?>
+
         </div>
     </div>
     <!--Кнопка сохранения изменений в модель    -->
