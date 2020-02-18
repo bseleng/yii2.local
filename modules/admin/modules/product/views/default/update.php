@@ -30,6 +30,7 @@ use \yii\widgets\Pjax;
                 ->label('Наименование продукта');
             ?>
 
+            <?php Pjax::begin(['id' => 'brand-pjax']); ?>
             <div class="input-group">
                 <!--  Выпадающий список бренд продукта           -->
                 <?= $form->field($modelProduct, 'brand_id')
@@ -41,6 +42,7 @@ use \yii\widgets\Pjax;
                     ->hint('Бренд продукта, который видит конечный пользователь')
                     ->label('Бренд продукта')
                 ?>
+
                 <!-- Trigger the modal with a button -->
                 <!--Кнопка добавления бренда-->
                 <span class="input-group-btn">
@@ -61,6 +63,7 @@ use \yii\widgets\Pjax;
                     ?>
                 </span>
             </div>
+            <?php Pjax::end(); ?>
 
             <!--  Поле ввода основная цена продукта           -->
             <div class="form-group col-md-6">
@@ -118,4 +121,5 @@ use \yii\widgets\Pjax;
     ]) ?>
 
 <?php ActiveForm::end(); ?>
+
 

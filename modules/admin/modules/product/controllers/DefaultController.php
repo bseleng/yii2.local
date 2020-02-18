@@ -126,14 +126,11 @@ class DefaultController extends Controller
     {
         $modelBrand = new Brand;
         $request = Yii::$app->request;
-        if ($modelBrand->load($request->post()) && $modelBrand->save()) {
-            if ($request->isPjax) {
-
-                $this->redirect(['update']);
-            }
+        if ($modelBrand->load($request->post())) {
+            $modelBrand->save();
         }
 
-        return $this->renderPartial(
+        return $this->renderAjax(
             'create_brand',
             [
                 'modelBrand' => $modelBrand,
