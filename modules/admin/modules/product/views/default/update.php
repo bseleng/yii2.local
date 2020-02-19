@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use \yii\widgets\Pjax;
 ?>
+
 <!--модальное окно из бутстрап-->
 <!-- Modal -->
 <div id="brandModal" class="modal fade" role="dialog">
@@ -42,6 +43,7 @@ use \yii\widgets\Pjax;
                     ->hint('Бренд продукта, который видит конечный пользователь')
                     ->label('Бренд продукта')
                 ?>
+
 
                 <!-- Trigger the modal with a button -->
                 <!--Кнопка добавления бренда-->
@@ -121,5 +123,6 @@ use \yii\widgets\Pjax;
     ]) ?>
 
 <?php ActiveForm::end(); ?>
+
 
 

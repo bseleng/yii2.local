@@ -86,6 +86,8 @@ class DefaultController extends Controller
     {
         $modelProduct = new Product;
 
+
+
         $request = Yii::$app->request;
         if ($modelProduct->load($request->post())) {
             $modelProduct->save();
@@ -93,12 +95,20 @@ class DefaultController extends Controller
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);
             }
+            if ($request->isAjax) {
+                $fullRequest = ($request->post('newBrand'));
+                $modelProduct->brand_id = $fullRequest;
+            }
         }
+
+
+
 
         return $this->render(
             'update',
             [
                 'modelProduct' => $modelProduct,
+                'fullRequest' => $fullRequest,
             ]
         );
     }
@@ -129,6 +139,7 @@ class DefaultController extends Controller
         if ($modelBrand->load($request->post())) {
             $modelBrand->save();
         }
+
 
         return $this->renderAjax(
             'create_brand',
