@@ -81,7 +81,7 @@ $js = <<<JS
             //определяет последний ИД в выпадающем списке
             var newBrand = $('#product-brand_id > option:last-child').val();
             //делает выбранным новый ИД бренда в выпадающем списке
-            $('#product-brand_id').val(newBrand)
+            $('#product-brand_id').val(newBrand);
             
             // передаёт значение нового бренда (ИД) ПОСТ запросом
             $.ajax({
