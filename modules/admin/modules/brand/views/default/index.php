@@ -6,8 +6,7 @@
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\bootstrap\Button;
+use app\modules\admin\modules\brand\models\BrandForm;
 ?>
 
 <div class="row">
@@ -23,9 +22,9 @@ use yii\bootstrap\Button;
 
 <?php
 
-$modelBrand = new \app\models\Brand;
+$modelBrandForm = new BrandForm;
 //настройка запроса для датаПровайдера
-$query = $modelBrand->find();
+$query = $modelBrandForm->find();
 $query->select(['*']);
 
 //настройки датаПровайдера для гридВью

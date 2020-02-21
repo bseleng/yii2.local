@@ -3,7 +3,7 @@
 namespace app\modules\admin\modules\brand\controllers;
 
 use yii\web\Controller;
-use \app\models\Brand;
+use app\modules\admin\modules\brand\models\BrandForm;
 use yii\filters\AccessControl;
 use Yii;
 
@@ -50,17 +50,17 @@ class DefaultController extends Controller
      */
     public function actionUpdate($id)
     {
-        $modelBrand = Brand::find()->where('brand_id = :id', [':id' => $id])->one();
+        $modelBrandForm = BrandForm::find()->where('brand_id = :id', [':id' => $id])->one();
 
         $request = Yii::$app->request;
-        if ($modelBrand->load($request->post())) {
-            $modelBrand->save();
+        if ($modelBrandForm->load($request->post())) {
+            $modelBrandForm->save();
             $this->redirect(['index']);
         }
         return $this->render(
             'update',
             [
-                'modelBrand' => $modelBrand,
+                'modelBrandForm' => $modelBrandForm,
             ]
         );
     }
@@ -68,8 +68,8 @@ class DefaultController extends Controller
     //удаление записи с указанным ИД
     public function actionDelete($id)
     {
-        $modelBrand = Brand::find()->where('brand_id = :id', [':id' => $id])->one();
-        $modelBrand->delete();
+        $modelBrandForm = BrandForm::find()->where('brand_id = :id', [':id' => $id])->one();
+        $modelBrandForm->delete();
         if (!Yii::$app->request->isAjax) {
             return $this->redirect(['index']);
         }
@@ -77,17 +77,17 @@ class DefaultController extends Controller
 
     public function actionCreate()
     {
-        $modelBrand = new Brand;
+        $modelBrandForm= new BrandForm;
 
         $request = Yii::$app->request;
-        if ($modelBrand->load($request->post())) {
-            $modelBrand->save();
+        if ($modelBrandForm->load($request->post())) {
+            $modelBrandForm->save();
             $this->redirect(['index']);
         }
         return $this->render(
             'create',
             [
-                'modelBrand' => $modelBrand,
+                'modelBrandForm' => $modelBrandForm,
             ]
         );
     }
