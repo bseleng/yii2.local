@@ -23,9 +23,9 @@ use yii\bootstrap\Button;
 
 <?php
 
-$modelProduct = new \app\models\Product;
+$modelProductForm = new app\modules\admin\modules\product\models\ProductForm;;
 //настройка запроса для датаПровайдера
-$query = $modelProduct->find();
+$query = $modelProductForm->find();
 # НЕПОНЯТНО! почему мне достаточно ВЫБРАТЬ ВСЁ и никак не обозначать джоин на модель Бренд
 $query->select(['*']);
 

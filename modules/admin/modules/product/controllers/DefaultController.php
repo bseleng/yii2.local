@@ -5,8 +5,8 @@ namespace app\modules\admin\modules\product\controllers;
 use app\modules\admin\modules\product\models\UploadFile;
 use yii\web\UploadedFile;
 use yii\web\Controller;
-use \app\models\Product;
-use \app\models\Brand;
+use app\modules\admin\modules\product\models\ProductForm;
+use app\modules\admin\modules\product\models\BrandForm;
 use yii\filters\AccessControl;
 use Yii;
 
@@ -53,11 +53,11 @@ class DefaultController extends Controller
      */
     public function actionUpdate($id)
     {
-        $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
+        $modelProductForm = ProductForm::find()->where('product_id = :id', [':id' => $id])->one();
 
         $request = Yii::$app->request;
-        if ($modelProduct->load($request->post())) {
-            $modelProduct->save();
+        if ($modelProductForm->load($request->post())) {
+            $modelProductForm->save();
             //если передан ЕХИТ то редирект $_GET[]
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);
@@ -67,7 +67,7 @@ class DefaultController extends Controller
         return $this->render(
             'update',
             [
-                'modelProduct' => $modelProduct,
+                'modelProductForm' => $modelProductForm,
             ]
         );
     }
@@ -84,13 +84,13 @@ class DefaultController extends Controller
      */
     public function actionCreate()
     {
-        $modelProduct = new Product;
+        $modelProductForm = new ProductForm;
 
 
 
         $request = Yii::$app->request;
-        if ($modelProduct->load($request->post())) {
-            $modelProduct->save();
+        if ($modelProductForm->load($request->post())) {
+            $modelProductForm->save();
             //если передан ЕХИТ то редирект $_GET[]
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);
@@ -100,7 +100,7 @@ class DefaultController extends Controller
         return $this->render(
             'update',
             [
-                'modelProduct' => $modelProduct,
+                'modelProductForm' => $modelProductForm,
             ]
         );
     }
@@ -110,8 +110,8 @@ class DefaultController extends Controller
     //удаление записи с указанным ИД
     public function actionDelete($id)
     {
-        $modelProduct = Product::find()->where('product_id = :id', [':id' => $id])->one();
-        $modelProduct->delete();
+        $modelProductForm = ProductForm::find()->where('product_id = :id', [':id' => $id])->one();
+        $modelProductForm->delete();
         if (!Yii::$app->request->isAjax) {
             return $this->redirect(['index']);
         }
@@ -126,17 +126,17 @@ class DefaultController extends Controller
      */
     public function  actionCreateBrand()
     {
-        $modelBrand = new Brand;
+        $modelBrandForm = new BrandForm;
         $request = Yii::$app->request;
-        if ($modelBrand->load($request->post())) {
-            $modelBrand->save();
+        if ($modelBrandForm->load($request->post())) {
+            $modelBrandForm->save();
         }
 
 
         return $this->renderAjax(
             'create_brand',
             [
-                'modelBrand' => $modelBrand,
+                'modelBrandForm' => $modelBrandForm,
             ]
         );
 

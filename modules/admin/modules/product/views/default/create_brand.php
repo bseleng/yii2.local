@@ -1,7 +1,6 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use \yii\widgets\Pjax;
 ?>
 
 <?php
@@ -19,7 +18,7 @@ $form = ActiveForm::begin([
 <div class="form-row clearfix">
     <div class="form-group col-md-8" style='margin-top: 1rem;'>
         <!--  Поле ввода наименование бренда           -->
-        <?= $form->field($modelBrand, 'brand_name')
+        <?= $form->field($modelBrandForm, 'brand_name')
             ->textInput(['maxlength' => 50])
             ->hint('Наименование бренда, которое видит конечный пользователь')
             ->label('Наименование бренда');
@@ -60,22 +59,23 @@ $js = <<<JS
                 success: function(data)
                  {
                     //очищает пользовательский ввод
-                    $("#brand-brand_name").val('');
+                    $("#brand-form").trigger('reset');
                     
-                //неработающие варианты
-                    // document.getElementById('brand-brand_name').reset();
-                    // $("#brand-brand_name").trigger('reset');
-                    // $("#brand-brand_name")[0].reset();
-                    // $("#brand-brand_name").get(0).reset();
+                //альтернативы
+                    //$("#brand-form").val('');
+                    // document.getElementById('brand-form').reset();
+                    // $("#brand-form").trigger('reset');
+                    // $("#brand-form")[0].reset();
+                    // $("#brand-form").get(0).reset();
                     
                     //перезагружает выпадающий список, обёрнутый в пЯКС
                     $.pjax.reload({ container: '#brand-pjax', }); 
                     // отпрабатывает по завершению пЯКС запроса для выпадающего списка
                     $('#brand-pjax').on('pjax:complete', function() {
                          //определяет последний ИД в выпадающем списке
-                         var newBrand = $('#product-brand_id > option:last-child').val();
+                         var newBrand = $('#productform-brand_id > option:last-child').val();
                          //делает выбранным новый ИД бренда в выпадающем списке
-                         $('#product-brand_id').val(newBrand);
+                         $('#productform-brand_id').val(newBrand);
                     });
                     //прячет модальное окно
                     $("#brandModal").modal('hide');
