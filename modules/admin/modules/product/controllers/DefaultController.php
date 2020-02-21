@@ -95,20 +95,12 @@ class DefaultController extends Controller
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);
             }
-            if ($request->isAjax) {
-                $fullRequest = ($request->post('newBrand'));
-                $modelProduct->brand_id = $fullRequest;
-            }
         }
-
-
-
 
         return $this->render(
             'update',
             [
                 'modelProduct' => $modelProduct,
-                'fullRequest' => $fullRequest,
             ]
         );
     }

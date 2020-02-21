@@ -42,8 +42,10 @@ $form = ActiveForm::begin([
 $js = <<<JS
         // поле ввода названия бренда
         var brandForm = $('#brand-form');
-        // перехватывает обычную отправку формы.
-        // передаёт данные от пользователя асинхронно
+        /**
+         * перехватывает обычную отправку формы.
+         * передаёт данные от пользователя асинхронно
+        */
         brandForm.on('beforeSubmit', function()
         {
             //подготавливает пользовательский ввод для передачи через  AJAX
@@ -54,43 +56,33 @@ $js = <<<JS
                 url: '/admin/product/default/create-brand',
                 type: 'POST',
                 data: data,
+                // Implement successful
                 success: function(data)
                  {
-                    // Implement successful
                     //очищает пользовательский ввод
-                    document.getElementById('brand-brand_name').value = '';
+                    $("#brand-brand_name").val('');
+                    
+                //неработающие варианты
+                    // document.getElementById('brand-brand_name').reset();
+                    // $("#brand-brand_name").trigger('reset');
+                    // $("#brand-brand_name")[0].reset();
+                    // $("#brand-brand_name").get(0).reset();
+                    
                     //перезагружает выпадающий список, обёрнутый в пЯКС
-                    $.pjax.reload({container: '#brand-pjax'}); //почему перезагружает ИД другой страницы?
+                    $.pjax.reload({ container: '#brand-pjax', }); 
+                    // отпрабатывает по завершению пЯКС запроса для выпадающего списка
+                    $('#brand-pjax').on('pjax:complete', function() {
+                         //определяет последний ИД в выпадающем списке
+                         var newBrand = $('#product-brand_id > option:last-child').val();
+                         //делает выбранным новый ИД бренда в выпадающем списке
+                         $('#product-brand_id').val(newBrand);
+                    });
                     //прячет модальное окно
                     $("#brandModal").modal('hide');
-                    
-                //почему не работает reset()
-                    // document.getElementById('brand-brand_name').reset();
-                    
-                // почему не работает jquery?
-                    // $("#brand-brand_name").value = '';
                 },
             });
             //предотвращает стандартную отработку кнопки отправить
             return false; // prevent default submit
-        });
-        
-        //отпрабатывает по завершению АЯКС запроса для выпадающего списка
-        $('#brand-pjax' ).ajaxComplete(function() 
-        {
-            //определяет последний ИД в выпадающем списке
-            var newBrand = $('#product-brand_id > option:last-child').val();
-            //делает выбранным новый ИД бренда в выпадающем списке
-            $('#product-brand_id').val(newBrand);
-            
-            // передаёт значение нового бренда (ИД) ПОСТ запросом
-            $.ajax({
-                // async: false,
-                url: '/admin/product/default/create',
-                type: 'POST',
-                data: {newBrand: newBrand},
-            });
-            
         });
 JS;
 

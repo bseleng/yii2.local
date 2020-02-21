@@ -16,6 +16,8 @@ class Product extends ActiveRecord
             [['brand_id',], 'integer'],
             //чтоб избежать ошибку, когда нет цены
             [['price_base', 'price_discounted',], 'default', 'value' => 0]
+
+            //создать необходимые поля
         ];
     }
     /**
