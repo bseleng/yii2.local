@@ -8,19 +8,6 @@ use \yii\BaseYii;
 
 class Product extends ActiveRecord
 {
-    public function rules()
-    {
-        return [
-            [['product_name', 'product_description', 'image_path',], 'string'],
-            [['price_base', 'price_discounted',], 'number'],
-            [['brand_id',], 'integer'],
-            //чтоб избежать ошибку, когда нет цены
-            [['price_base', 'price_discounted',], 'default', 'value' => 0],
-
-            // необходимые поля
-            [['product_name', 'brand_id',], 'required'],
-        ];
-    }
     /**
      * @inheritdoc
      */
@@ -40,6 +27,7 @@ class Product extends ActiveRecord
     public function getBrand()
     {
         return $this->hasOne(Brand::class, ['brand_id' => 'brand_id']);
+
     }
 
     /**

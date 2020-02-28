@@ -3,12 +3,14 @@
 <br>
 
 <?php
-use yii\data\ActiveDataProvider;
+
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\Button;
 ?>
+
+<?= $this->render('_product_search_form', ['model' => $model]); ?>
 
 <div class="row">
     <?= Html::a('Создать карточку продукта', ['default/create'],
@@ -23,30 +25,13 @@ use yii\bootstrap\Button;
 
 <?php
 
-$modelProductForm = new app\modules\admin\modules\product\models\ProductForm;;
 //настройка запроса для датаПровайдера
-$query = $modelProductForm->find();
-# НЕПОНЯТНО! почему мне достаточно ВЫБРАТЬ ВСЁ и никак не обозначать джоин на модель Бренд
-$query->select(['*']);
-
-//настройки датаПровайдера для гридВью
-$provider = new ActiveDataProvider([
-    'query' => $query,
-    'sort' => [
-        'defaultOrder' => [
-            'product_name' => SORT_ASC,
-        ],
-    ],
-    'pagination' => [
-        'pageSize' => 10,
-    ],
-]);
 
 //pjax  начало
 \yii\widgets\Pjax::begin(['id' => 'pjax-container']);
 //вывод виджета гридВью с настройками
 echo  GridView::widget([
-    'dataProvider' => $provider,
+    'dataProvider' => $model->search(),
     //колонки
     'columns' => [
         //ид продукта из БД

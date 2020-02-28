@@ -3,6 +3,7 @@
 namespace app\modules\admin\modules\product\controllers;
 
 use app\modules\admin\modules\product\models\UploadFile;
+use app\modules\admin\modules\product\models\ProductSearchForm;
 use yii\web\UploadedFile;
 use yii\web\Controller;
 use app\modules\admin\modules\product\models\ProductForm;
@@ -33,7 +34,12 @@ class DefaultController extends Controller
     //открывает стартовую страницу
     public function actionIndex()
     {
-        return $this->render('index');
+        $model = new ProductSearchForm;
+        $request = Yii::$app->request;
+        $model->load($request->get());
+        return $this->render('index', ['model' => $model]);
+
+
     }
 
     //открывает страницу для редактирования конкретной записи из модели

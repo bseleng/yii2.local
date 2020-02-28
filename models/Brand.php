@@ -6,12 +6,6 @@ use \yii\db\ActiveRecord;
 
 class Brand extends ActiveRecord
 {
-    public function rules()
-    {
-        return [
-            [['brand_name'], 'string'],
-        ];
-    }
 
     /**
      * @inheritdoc

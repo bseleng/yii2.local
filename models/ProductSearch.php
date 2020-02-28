@@ -21,13 +21,7 @@ class ProductSearch extends Product
         return [
             //
             [
-                [
-                    'brand_id',
-                    'productNameSort',
-                    'productMinPrice',
-                    'productMaxPrice',
-                ],
-                'integer'
+                ['brand_id', 'productNameSort', 'productMinPrice', 'productMaxPrice',], 'integer'
             ],
         ];
     }
