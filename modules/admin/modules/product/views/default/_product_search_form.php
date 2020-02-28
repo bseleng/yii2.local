@@ -56,7 +56,15 @@ $form = ActiveForm::begin([
             ?>
         </div>
 
-            <?= Html::submitButton('Найти', ['class' => 'btn btn-primary', 'style' => 'margin-top: 2.7rem; padding: 0.7rem 4rem;']) ?>
+            <?= Html::submitButton('Найти', ['class' => 'btn btn-primary', 'style' => 'margin-top: 2.9rem; padding: 0.7rem 1.5rem;']) ?>
+
+<!--            --><?//= Html::resetButton('Очистить', ['class' => 'btn btn-primary', 'style' => 'margin-top: 2.9rem; padding: 0.7rem 2rem;']) ?>
+            <?= Html::a('Очистить', ['index'],
+                [
+                        'class' => 'btn btn-primary',
+                        'style' => 'margin-top: 2.9rem; margin-left: 1rem; padding: 0.7rem 1.5rem;',
+                        'id' => 'reset-btn',
+                ]) ?>
     </div>
 
 <?php ActiveForm::end(); ?>

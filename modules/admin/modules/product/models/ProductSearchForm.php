@@ -41,6 +41,12 @@ class ProductSearchForm extends Product
         }
     }
 
+    /**
+     * применяет к объекту запроса фильтр по минимальной цене
+     *
+     * @param $query объект запроса с любыми фильтрами до него
+     * @return mixed объект запроса с применёнными фильтрами минимальной цены
+     */
         public function filterMinPrice($query)
         {
             $query->andWhere([
@@ -57,7 +63,12 @@ class ProductSearchForm extends Product
             return $query;
         }
 
-
+    /**
+     * применяет к объекту запроса фильтр по максимальной цене
+     *
+     * @param $query объект запроса с любыми фильтрами до него
+     * @return mixed объект запроса с применёнными фильтрами максимальной цены
+     */
     public function filterMaxPrice($query)
     {
         $query->andWhere([
@@ -77,7 +88,7 @@ class ProductSearchForm extends Product
 
 
     /**
-     * ищет по указанным критериям (бренд, имя, описание, ...)
+     * ищет по указанным критериям (бренд, имя, описание, минимальная цена, максимальная цена)
      *
      * @return ActiveDataProvider
      */
