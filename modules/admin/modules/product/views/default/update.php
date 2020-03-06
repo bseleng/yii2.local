@@ -4,7 +4,8 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
-use \yii\widgets\Pjax;
+use yii\widgets\Pjax;
+use yii\db\ActiveRecordInterface;
 ?>
 
 <!--модальное окно из бутстрап-->
@@ -103,7 +104,8 @@ use \yii\widgets\Pjax;
                 title="Изображение продукта <?= $modelProductForm->product_name ?>"
                 class=""
             >
-            <?= $form->field($modelProductForm, 'image_path')->fileInput(); ?>
+            <!--  Форма загрузки изображения          -->
+            <?= $form->field($modelProductForm, 'imageFile')->fileInput(); ?>
 
         </div>
     </div>
@@ -124,5 +126,12 @@ use \yii\widgets\Pjax;
 
 <?php ActiveForm::end(); ?>
 
+<?php
+
+var_dump($modelProductForm->image_path);
+var_dump($modelProductForm->product_id);
+var_dump($modelProductForm->getPrimaryKey());
+
+?>
 
 

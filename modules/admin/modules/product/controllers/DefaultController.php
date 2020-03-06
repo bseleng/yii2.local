@@ -10,6 +10,7 @@ use app\modules\admin\modules\product\models\ProductForm;
 use app\modules\admin\modules\product\models\BrandForm;
 use yii\filters\AccessControl;
 use Yii;
+use yii\db\Transaction;
 
 class DefaultController extends Controller
 {
@@ -63,7 +64,14 @@ class DefaultController extends Controller
 
         $request = Yii::$app->request;
         if ($modelProductForm->load($request->post())) {
-            $modelProductForm->save();
+            $modelProductForm->imageFile = UploadedFile::getInstance($modelProductForm, 'imageFile');
+            if ($modelProductForm->save()) {
+                //загрузка изображения
+                if ($modelProductForm->imageFile) {
+                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name, $modelProductForm->getPrimaryKey());
+                    $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
+                }
+            }
             //если передан ЕХИТ то редирект $_GET[]
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);
@@ -92,11 +100,18 @@ class DefaultController extends Controller
     {
         $modelProductForm = new ProductForm;
 
-
-
+//ЭКСПОРТ
+//php EXCEL
         $request = Yii::$app->request;
         if ($modelProductForm->load($request->post())) {
-            $modelProductForm->save();
+            $modelProductForm->imageFile = UploadedFile::getInstance($modelProductForm, 'imageFile');
+            if ($modelProductForm->save()) {
+                //загрузка изображения
+                if ($modelProductForm->imageFile) {
+                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name, $modelProductForm->getPrimaryKey());
+                    $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
+                }
+            }
             //если передан ЕХИТ то редирект $_GET[]
             if ($request->post('SaveExitBtn')) {
                 $this->redirect(['index']);

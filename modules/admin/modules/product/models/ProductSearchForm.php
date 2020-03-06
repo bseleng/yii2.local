@@ -85,8 +85,6 @@ class ProductSearchForm extends Product
         return $query;
     }
 
-
-
     /**
      * ищет по указанным критериям (бренд, имя, описание, минимальная цена, максимальная цена)
      *
@@ -120,12 +118,7 @@ class ProductSearchForm extends Product
             $this->filterMaxPrice($query);
         }
 
-        if ($this->minPrice AND $this->maxPrice) {
-            $this->filterMinPrice($query);
-            $this->filterMaxPrice($query);
-        }
-
-
+//having SQL
 //настройки датаПровайдера для гридВью
         $provider = new ActiveDataProvider([
             'query' => $query,
