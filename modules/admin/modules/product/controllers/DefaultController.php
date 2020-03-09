@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\modules\product\controllers;
 
+use app\modules\admin\modules\product\models\Export;
 use app\modules\admin\modules\product\models\UploadFile;
 use app\modules\admin\modules\product\models\ProductSearchForm;
 use yii\web\UploadedFile;
@@ -38,6 +39,12 @@ class DefaultController extends Controller
         $model = new ProductSearchForm;
         $request = Yii::$app->request;
         $model->load($request->get());
+
+        $session = Yii::$app->session;
+        $session->open();
+        $session->set('url', $request->url);
+        $session->close();
+
         return $this->render('index', ['model' => $model]);
 
 
@@ -74,7 +81,11 @@ class DefaultController extends Controller
             }
             //если передан ЕХИТ то редирект $_GET[]
             if ($request->post('SaveExitBtn')) {
-                $this->redirect(['index']);
+
+                $session = Yii::$app->session;
+                $url = $session->get('url');
+                $referer = $request->getReferrer();
+                $this->redirect([$url]);
             }
         }
 
@@ -132,6 +143,9 @@ class DefaultController extends Controller
     public function actionDelete($id)
     {
         $modelProductForm = ProductForm::find()->where('product_id = :id', [':id' => $id])->one();
+        if ($modelProductForm->image_path) {
+            unlink($modelProductForm->getDir($modelProductForm->brand->brand_name). $modelProductForm->image_path);
+        }
         $modelProductForm->delete();
         if (!Yii::$app->request->isAjax) {
             return $this->redirect(['index']);
@@ -178,6 +192,14 @@ class DefaultController extends Controller
         }
 
         return $this->render('upload', ['model' => $model]);
+    }
+
+
+    public function actionExport()
+    {
+        $model = new Export();
+        $model->export();
+        return $this->render('export', ['model' => $model]);
     }
 
 }
