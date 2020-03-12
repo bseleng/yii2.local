@@ -17,7 +17,7 @@ $form = ActiveForm::begin([
     <div>
         <div class="col-lg-2" style='margin-top: 1rem;'>
             <!--  Поле поиска наименование бренда           -->
-            <?= $form->field($model, 'product_name')
+            <?= $form->field($modelProductSearchForm, 'product_name')
                 ->textInput(['maxlength' => 50])
                 ->label('Название продукта');
             ?>
@@ -25,7 +25,7 @@ $form = ActiveForm::begin([
 
         <div class="col-lg-2" style='margin-top: 1rem;'>
             <!--  Поле поиска наименование бренда           -->
-            <?= $form->field($model, 'brandName')
+            <?= $form->field($modelProductSearchForm, 'brandName')
                 ->textInput(['maxlength' => 50])
                 ->label('Название бренда');
             ?>
@@ -33,7 +33,7 @@ $form = ActiveForm::begin([
 
         <div class="col-lg-2" style='margin-top: 1rem;'>
             <!--  Поле поиска наименование бренда           -->
-            <?= $form->field($model, 'product_description')
+            <?= $form->field($modelProductSearchForm, 'product_description')
                 ->textInput(['maxlength' => 50])
                 ->label('Описание продукта');
             ?>
@@ -42,7 +42,7 @@ $form = ActiveForm::begin([
 
         <div class="col-lg-2" style='margin-top: 1rem;'>
             <!--  Поле поиска наименование бренда           -->
-            <?= $form->field($model, 'minPrice')
+            <?= $form->field($modelProductSearchForm, 'minPrice')
                 ->textInput(['maxlength' => 50])
                 ->label('Минимальная цена');
             ?>
@@ -50,7 +50,7 @@ $form = ActiveForm::begin([
 
         <div class="col-lg-2" style='margin-top: 1rem;'>
             <!--  Поле поиска наименование бренда           -->
-            <?= $form->field($model, 'maxPrice')
+            <?= $form->field($modelProductSearchForm, 'maxPrice')
                 ->textInput(['maxlength' => 50])
                 ->label('Максимальная цена');
             ?>

@@ -79,15 +79,12 @@ class Product extends ActiveRecord
      * @return string путь к файлу изображения продукта
      *
      */
-    public function findImagePath($format = 'png')
+    public function findImagePath()
     {
         $imagePath = '/' . 'uploads/shop/pic';
         $imagePath .= '/' . $this->brand->brand_name;
-        if (!empty($this->image_path)) {
-            $imagePath .= '/' . $this->image_path;
-        } else {
-            $imagePath .= '/' . str_replace(" ", "", $this->product_name). "." . $format;
-        }
+        $imagePath .= '/' . $this->image_path;
+
 
         return  strtolower($imagePath);
     }

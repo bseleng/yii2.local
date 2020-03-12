@@ -36,16 +36,19 @@ class DefaultController extends Controller
     //открывает стартовую страницу
     public function actionIndex()
     {
-        $model = new ProductSearchForm;
+        $modelProductSearchForm = new ProductSearchForm;
+
         $request = Yii::$app->request;
-        $model->load($request->get());
+        $modelProductSearchForm->load($request->get());
 
         $session = Yii::$app->session;
         $session->open();
         $session->set('url', $request->url);
         $session->close();
 
-        return $this->render('index', ['model' => $model]);
+        return $this->render('index', [
+            'modelProductSearchForm' => $modelProductSearchForm,
+        ]);
 
 
     }
@@ -198,7 +201,9 @@ class DefaultController extends Controller
     public function actionExport()
     {
         $model = new Export();
-        $model->export();
+        $request = Yii::$app->request;
+        $model->setAttributes(json_decode($request->get('getParams'), true)['ProductSearchForm']);
+
         return $this->render('export', ['model' => $model]);
     }
 

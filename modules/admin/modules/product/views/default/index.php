@@ -7,10 +7,10 @@
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\bootstrap\Button;
+use yii\widgets\ActiveForm;
 ?>
 
-<?= $this->render('_product_search_form', ['model' => $model]); ?>
+<?= $this->render('_product_search_form', ['modelProductSearchForm' => $modelProductSearchForm]); ?>
 
 <div class="row">
     <?= Html::a('Создать карточку продукта', ['default/create'],
@@ -31,7 +31,7 @@ use yii\bootstrap\Button;
 \yii\widgets\Pjax::begin(['id' => 'pjax-container']);
 //вывод виджета гридВью с настройками
 echo  GridView::widget([
-    'dataProvider' => $model->search(),
+    'dataProvider' => $modelProductSearchForm->search(),
     //колонки
     'columns' => [
         //ид продукта из БД
@@ -100,3 +100,22 @@ echo  GridView::widget([
 //pjax  конец
 \yii\widgets\Pjax::end();
 ?>
+
+<?php
+$form = ActiveForm::begin([
+'id' => 'export-form',
+'method' => 'get',
+'options' => ['class' => 'form-group'],
+'action' => 'export',
+]);
+?>
+<?= Html::submitButton('Экспортировать подборку',
+    [
+        'class' => 'btn btn-primary',
+        'style' => 'padding: 0.6rem 1.5rem; float:right;'
+    ])
+?>
+
+<?= Html::hiddenInput ( 'getParams', json_encode(Yii::$app->request->get())) ?>
+
+<?php ActiveForm::end(); ?>

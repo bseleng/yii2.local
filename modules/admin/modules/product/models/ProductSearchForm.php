@@ -11,7 +11,6 @@ class ProductSearchForm extends Product
     public $minPrice;
     public $maxPrice;
     public $brandName;
-    public $price_final;
 
     public function rules()
     {
