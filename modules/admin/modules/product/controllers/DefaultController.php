@@ -200,11 +200,26 @@ class DefaultController extends Controller
 
     public function actionExport()
     {
-        $model = new Export();
+        $modelProductSearchForm = new ProductSearchForm;
         $request = Yii::$app->request;
-        $model->setAttributes(json_decode($request->get('getParams'), true)['ProductSearchForm']);
+        $modelProductSearchForm->load(json_decode($request->get('getParams'),true));
+        $dataProvider = $modelProductSearchForm->search();
 
-        return $this->render('export', ['model' => $model]);
+        $modelExport = new Export();
+        $modelExport->writeToFile($dataProvider);
+        $modelExport->export($dataProvider);
+
+//        header('Content-Type: text/csv');
+//        header('Content-Disposition: attachment;filename="myfile.csv"');
+
+//        header('Content-Type: application/vnd.ms-excel');
+//        header('Content-Disposition: attachment;filename="myfile.xlsx"');
+//        header('Cache-Control: max-age=0');
+
+//        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
+//        $writer->save('php://output');
+
+        return $this->render('export', ['dataProvider' => $dataProvider]);
     }
 
 }

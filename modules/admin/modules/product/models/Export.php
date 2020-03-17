@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use yii\data\DataProviderInterface;
 use yii\data\ActiveDataProvider;
 
-class Export extends ProductSearchForm
+class Export
 {
 
     /**
@@ -56,22 +56,28 @@ class Export extends ProductSearchForm
 
     /**
      * записывает выбранную пользователем подборку с первой страницы в .XLS
+     * @param object $dataProvider yii\data\ActiveDataProvider  полученный после выполнения поиска на странице ПРОДУКТ
      * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function export()
+    public function export($dataProvider)
     {
         //Создаёт объект книги
         $spreadsheet = new Spreadsheet();
         //Устанавливает акивный лист
         $sheet = $spreadsheet->getActiveSheet();
-        //Получает массив моделей на ПЕРВОМ листе подборки
-        $collection = $this->search()->getModels();
-        //Получает количество моделей на ПЕРВОМ листе подборки
-        $count = $this->search()->getCount();
 
-        //счётчик для прохода по массиву с моделями
-        $i = 1;
+        //the total number of data models.
+        $totalModelCount = $dataProvider->getTotalCount();
+        // Устанавливаем размер страницы (количество моделей на странице) Ставим 1000, чтобы не нагружать БД
+        $dataProvider->getPagination()->setPageSize(1000);
+        //The number of items per page. Записываем размер страницы в переменную
+        $pageSize = $dataProvider->getPagination()->getPageSize();
+
+        // Общий счётчик моделей
+        $indexTotalModel = 1;
+        // Записываем в переменную номер текущей страницы
+        $currentPage = $dataProvider->getPagination()->getPage();
         //счётчик для прохода по строкам листа
         $row = 2;
 
@@ -83,9 +89,9 @@ class Export extends ProductSearchForm
         $sheet->setCellValue('E1', 'Описание');
 
         //Устанавливает ширину столбца  E (описание)
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(85);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setWidth(95);
         //Высота ряда
-        $rowHeight = 85;
+        $rowHeight = 95;
         //Получает ширину столбца  D (изображение)
         $colWidth = $spreadsheet->getActiveSheet()->getColumnDimension('D')->getWidth();
 
@@ -99,20 +105,27 @@ class Export extends ProductSearchForm
         $spreadsheet->getActiveSheet()->getStyle('A:E')
             ->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
-        //проходит по массиву с моделями, записывая информацию из них в заданные ячейки
-        while($i < $count) {
-            foreach($collection as $id => $model) {
 
+        while ($indexTotalModel <= $totalModelCount) {
+            //Ставим номер страницы объекта пагинации (начиная с 0)
+            $dataProvider->getPagination()->setPage($currentPage);
+            // Обновляет данные датапровайдера.
+            $dataProvider->refresh();
+            //The list of data models in the current page.
+            $collection = $dataProvider->getModels();
+            //счётчик моделей страницы
+            $indexModel = 0;
+
+            while($indexModel <= $pageSize AND $indexTotalModel <= $totalModelCount) {
+                foreach($collection as $id => $model) {
                 //Устанавивает высоту ряда
                 $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($rowHeight);
+
                 //записывает наименование продукта в Столбец  A
                 $sheet->setCellValue('A' . $row, $model['product_name']);
 
                 //записывает брэнд продукта в Столбец  B
                 $sheet->setCellValue('B' . $row, $model['brand']['brand_name']);
-
-#До сих пор не понял, как эта связка работает
-# Как мы попадаем на другую таблицу - я хз
 
                 //записывает актуальную цену в Столбец  C
                 if($model['price_discounted'] != 0) {
@@ -142,48 +155,93 @@ class Export extends ProductSearchForm
 
                 // записывает описание продукта Столбец  E
                 $sheet->setCellValue('E' . $row, $model['product_description']);
+
                 //сначала увеличиваем значение ряда, чтобы не затирать, то что записали
                 $row++;
-                //затем инкрементируем счётчик, чтобы прокти проверку  while()
-                $i++;
+                //затем инкрементируем счётчик, чтобы пройти проверку  while()
+                //инкремент счётчика моделей для страницы
+                $indexModel++;
+                //инкремент общего счётчика моделей
+                $indexTotalModel++;
+                }
             }
+            //инкремент номера страницы
+            $currentPage++;
         }
+
+        // для передачи пользователю
+//        return $spreadsheet;
+
+        //Для записи в UPLOADS
         //записывает информацию из книги в файл !!!УТОЧНИТЬ!!!
         $writer = new Xlsx($spreadsheet);
         //Сохраняет файл книги с заданным названием
-        $writer->save('XLS-shop-'. date('d-m-y Hi') . '.xls');
-
+        $writer->save('XLSX-shop-'. date('d-m-y Hi') . '.xlsx');
     }
 
     /**
      * записывает выбранную пользователем подборку с первой страницы в .CSV
+     * @param object $dataProvider yii\data\ActiveDataProvider  полученный после выполнения поиска на странице ПРОДУКТ
      */
-    public function writeToFile()
+    public function writeToFile($dataProvider)
     {
+        //the total number of data models.
+        $totalModelCount = $dataProvider->getTotalCount();
+        // Устанавливаем размер страницы (количество моделей на странице) Ставим 1000, чтобы не нагружать БД
+        $dataProvider->getPagination()->setPageSize(1000);
+        //The number of items per page. Записываем размер страницы в переменную
+        $pageSize = $dataProvider->getPagination()->getPageSize();
+
+        // Общий счётчик моделей
+        $indexTotalModel = 1;
+        // Записываем в переменную номер текущей страницы
+        $currentPage = $dataProvider->getPagination()->getPage();
+
         $handle = fopen('shop-'. date('d-m-y Hi') . '.csv', 'w');
-        $collection = $this->search()->getModels();
-        $count = $this->search()->getCount();
-        $i = 1;
         fwrite($handle, 'Наименование; Бренд; Стоимость; Описание;' . PHP_EOL);
-        while($i < $count) {
-            foreach($collection as $id => $model) {
 
-                $string = $model['product_name']. ';';
-                #До сих пор не понял, как эта связка работает
-                # Как мы попадаем на другую таблицу - я хз
-                $string .=  $model['brand']['brand_name']. ';';
-                if($model['price_discounted'] != 0) {
-                    $string .= $model['price_discounted'] . ';';
-                } else {
-                    $string .= $model['price_base']. ';';
+        while ($indexTotalModel <= $totalModelCount) {
+            //Ставим номер страницы объекта пагинации (начиная с 0)
+            $dataProvider->getPagination()->setPage($currentPage);
+
+            ### КАК БЫЛО ЭТО ПОНЯТЬ?!##
+            // Обновляет данные датапровайдера.
+            $dataProvider->refresh();
+
+            //The list of data models in the current page.
+            $collection = $dataProvider->getModels();
+            //счётчик моделей страницы
+            $indexModel = 0;
+
+            while($indexModel <= $pageSize AND $indexTotalModel <= $totalModelCount) {
+                foreach($collection as $id => $model) {
+                    //номер по порядку
+                    $string = $indexTotalModel . ';';
+                    //название
+                    $string .= $model['product_name']. ';';
+                    //бренд
+                    $string .=  $model['brand']['brand_name']. ';';
+                    //выбор финальной цены (скидочной, если она есть, в противном случае - базовой)
+                    if($model['price_discounted'] != 0) {
+                        $string .= $model['price_discounted'] . ';';
+                    } else {
+                        $string .= $model['price_base']. ';';
+                    }
+                    //описание
+                    $string .=  $model['product_description']. ';';
+                    //конец строци
+                    $string .=   PHP_EOL;
+                    //запись строки
+                    fwrite($handle, $string);
+
+                    //инкремент счётчика моделей для страницы
+                    $indexModel++;
+                    //инкремент общего счётчика моделей
+                    $indexTotalModel++;
                 }
-                $string .=  $model['product_description']. ';';
-                $string .=   PHP_EOL;
-
-                fwrite($handle, $string);
-
-                $i++;
             }
+            //инкремент номера страницы
+            $currentPage++;
         }
         fclose($handle);
     }
