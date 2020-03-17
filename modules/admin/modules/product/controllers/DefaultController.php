@@ -206,20 +206,37 @@ class DefaultController extends Controller
         $dataProvider = $modelProductSearchForm->search();
 
         $modelExport = new Export();
-        $modelExport->writeToFile($dataProvider);
-        $modelExport->export($dataProvider);
+//        $modelExport->writeToFile($dataProvider);
+        $spreadsheet = $modelExport->export($dataProvider);
 
-//        header('Content-Type: text/csv');
-//        header('Content-Disposition: attachment;filename="myfile.csv"');
+        $file =$modelExport->writeToFile($dataProvider);
+        if (file_exists($file)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: text/csv; charset=UTF-8');
+            header('Content-Disposition: attachment; filename="'.basename($file).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($file));
+            readfile($file);
+            exit;
+        }
 
-//        header('Content-Type: application/vnd.ms-excel');
-//        header('Content-Disposition: attachment;filename="myfile.xlsx"');
-//        header('Cache-Control: max-age=0');
+        ignore_user_abort(true);
+        if (connection_aborted()) {
+            unlink($file);
+        }
 
-//        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
-//        $writer->save('php://output');
 
-        return $this->render('export', ['dataProvider' => $dataProvider]);
+
+        //вывод .XLS файла отфильтрованной подборки в браузер
+/*        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename='. 'XLSX-shop-'. date('d-m-y__Hi') . '.xlsx');
+        header('Cache-Control: max-age=0');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
+        $writer->save('php://output');*/
+
+//        return $this->render('export', ['dataProvider' => $dataProvider]);
     }
 
 }

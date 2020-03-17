@@ -1,5 +1,4 @@
 <?php
-
 //$dataProvider->prepare();
 //$dataProvider->setPagination(['page' => 2]);
 

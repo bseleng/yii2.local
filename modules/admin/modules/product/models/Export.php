@@ -170,7 +170,7 @@ class Export
         }
 
         // для передачи пользователю
-//        return $spreadsheet;
+        return $spreadsheet;
 
         //Для записи в UPLOADS
         //записывает информацию из книги в файл !!!УТОЧНИТЬ!!!
@@ -197,8 +197,17 @@ class Export
         // Записываем в переменную номер текущей страницы
         $currentPage = $dataProvider->getPagination()->getPage();
 
-        $handle = fopen('shop-'. date('d-m-y Hi') . '.csv', 'w');
-        fwrite($handle, 'Наименование; Бренд; Стоимость; Описание;' . PHP_EOL);
+        //Создаёт имя файла в формате  ДД-ММ-ГГ ЧЧММ)
+        $fileName = 'shop-'. date('d-m-y Hi') . '.csv';
+        //Создаёт файл и открывает его в режиме чтения
+        $handle = fopen($fileName, 'w');
+
+        //добавляет UTF-8 BOM для чтения кириллицы в Excel
+        $BOM = "\xEF\xBB\xBF";
+        fwrite($handle, $BOM);
+        //Записывает заголовок
+        $topLine = '№; Наименование; Бренд; Стоимость; Описание;' . PHP_EOL;
+        fwrite($handle, $topLine);
 
         while ($indexTotalModel <= $totalModelCount) {
             //Ставим номер страницы объекта пагинации (начиная с 0)
@@ -231,6 +240,8 @@ class Export
                     $string .=  $model['product_description']. ';';
                     //конец строци
                     $string .=   PHP_EOL;
+
+//                    mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
                     //запись строки
                     fwrite($handle, $string);
 
@@ -244,5 +255,7 @@ class Export
             $currentPage++;
         }
         fclose($handle);
+
+        return $fileName;
     }
 }
