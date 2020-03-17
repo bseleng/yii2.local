@@ -124,16 +124,35 @@ echo  GridView::widget([
 
 <?php
 $form = ActiveForm::begin([
-'id' => 'export-form',
+'id' => 'export-form-xlsx',
 'method' => 'get',
 'options' => ['class' => 'form-group'],
-'action' => 'export',
+'action' => 'export-xlsx',
 ]);
 ?>
-<?= Html::submitButton('Экспортировать подборку',
+<?= Html::submitButton('Экспорт в .xlsx',
     [
-        'class' => 'btn btn-primary',
-        'style' => 'padding: 0.6rem 1.5rem; float:right;'
+        'class' => 'btn btn-success',
+        'style' => 'padding: 0.6rem 1rem; float:right; margin: 0 0.5rem;'
+    ])
+?>
+
+<?= Html::hiddenInput ( 'getParams', json_encode(Yii::$app->request->get())) ?>
+
+<?php ActiveForm::end(); ?>
+
+<?php
+$form = ActiveForm::begin([
+    'id' => 'export-form-csv',
+    'method' => 'get',
+    'options' => ['class' => 'form-group'],
+    'action' => 'export-csv',
+]);
+?>
+<?= Html::submitButton('Экспорт в .csv',
+    [
+        'class' => 'btn btn-default',
+        'style' => 'padding: 0.6rem 1rem; float:right; margin: 0 0.5rem;'
     ])
 ?>
 

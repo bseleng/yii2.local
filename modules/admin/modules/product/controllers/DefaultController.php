@@ -198,7 +198,7 @@ class DefaultController extends Controller
     }
 
 
-    public function actionExport()
+    public function actionExportXlsx()
     {
         $modelProductSearchForm = new ProductSearchForm;
         $request = Yii::$app->request;
@@ -206,10 +206,26 @@ class DefaultController extends Controller
         $dataProvider = $modelProductSearchForm->search();
 
         $modelExport = new Export();
-//        $modelExport->writeToFile($dataProvider);
-        $spreadsheet = $modelExport->export($dataProvider);
 
+        //вывод .XLS файла отфильтрованной подборки в браузер
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename='. 'XLSX-shop-'. date('d-m-y__Hi') . '.xlsx');
+        header('Cache-Control: max-age=0');
+        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
+        $writer->save('php://output');
+    }
+
+
+    public function actionExportCsv()
+    {
+        $modelProductSearchForm = new ProductSearchForm;
+        $request = Yii::$app->request;
+        $modelProductSearchForm->load(json_decode($request->get('getParams'),true));
+        $dataProvider = $modelProductSearchForm->search();
+
+        $modelExport = new Export();
         $file =$modelExport->writeToFile($dataProvider);
+
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
             header('Content-Type: text/csv; charset=UTF-8');
@@ -226,18 +242,9 @@ class DefaultController extends Controller
         if (connection_aborted()) {
             unlink($file);
         }
-
-
-
-        //вывод .XLS файла отфильтрованной подборки в браузер
-/*        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename='. 'XLSX-shop-'. date('d-m-y__Hi') . '.xlsx');
-        header('Cache-Control: max-age=0');
-        $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
-        $writer->save('php://output');*/
-
-//        return $this->render('export', ['dataProvider' => $dataProvider]);
     }
+
+
 
 }
 
