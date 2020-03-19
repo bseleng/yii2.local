@@ -2,16 +2,15 @@
 
 namespace app\modules\admin\modules\product\controllers;
 
-use app\modules\admin\modules\product\models\Export;
-use app\modules\admin\modules\product\models\UploadFile;
-use app\modules\admin\modules\product\models\ProductSearchForm;
-use yii\web\UploadedFile;
-use yii\web\Controller;
-use app\modules\admin\modules\product\models\ProductForm;
 use app\modules\admin\modules\product\models\BrandForm;
-use yii\filters\AccessControl;
+use app\modules\admin\modules\product\models\Export;
+use app\modules\admin\modules\product\models\ProductForm;
+use app\modules\admin\modules\product\models\ProductSearchForm;
+use app\modules\admin\modules\product\models\UploadFile;
 use Yii;
-use yii\db\Transaction;
+use yii\filters\AccessControl;
+use yii\web\Controller;
+use yii\web\UploadedFile;
 
 class DefaultController extends Controller
 {
@@ -78,7 +77,8 @@ class DefaultController extends Controller
             if ($modelProductForm->save()) {
                 //загрузка изображения
                 if ($modelProductForm->imageFile) {
-                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name, $modelProductForm->getPrimaryKey());
+                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name,
+                        $modelProductForm->getPrimaryKey());
                     $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
                 }
             }
@@ -122,7 +122,8 @@ class DefaultController extends Controller
             if ($modelProductForm->save()) {
                 //загрузка изображения
                 if ($modelProductForm->imageFile) {
-                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name, $modelProductForm->getPrimaryKey());
+                    $modelProductForm->uploadImage($modelProductForm->brand->brand_name,
+                        $modelProductForm->getPrimaryKey());
                     $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
                 }
             }
@@ -141,13 +142,12 @@ class DefaultController extends Controller
     }
 
 
-
     //удаление записи с указанным ИД
     public function actionDelete($id)
     {
         $modelProductForm = ProductForm::find()->where('product_id = :id', [':id' => $id])->one();
         if ($modelProductForm->image_path) {
-            unlink($modelProductForm->getDir($modelProductForm->brand->brand_name). $modelProductForm->image_path);
+            unlink($modelProductForm->getDir($modelProductForm->brand->brand_name) . $modelProductForm->image_path);
         }
         $modelProductForm->delete();
         if (!Yii::$app->request->isAjax) {
@@ -162,7 +162,7 @@ class DefaultController extends Controller
      *
      * @return string модальное окно добавления бренда
      */
-    public function  actionCreateBrand()
+    public function actionCreateBrand()
     {
         $modelBrandForm = new BrandForm;
         $request = Yii::$app->request;
@@ -202,14 +202,14 @@ class DefaultController extends Controller
     {
         $modelProductSearchForm = new ProductSearchForm;
         $request = Yii::$app->request;
-        $modelProductSearchForm->load(json_decode($request->get('getParams'),true));
+        $modelProductSearchForm->load(json_decode($request->get('getParams'), true));
         $dataProvider = $modelProductSearchForm->search();
 
         $modelExport = new Export();
 
         //вывод .XLS файла отфильтрованной подборки в браузер
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename='. 'XLSX-shop-'. date('d-m-y__Hi') . '.xlsx');
+        header('Content-Disposition: attachment;filename=' . 'XLSX-shop-' . date('d-m-y__Hi') . '.xlsx');
         header('Cache-Control: max-age=0');
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($modelExport->export($dataProvider), 'Xls');
         $writer->save('php://output');
@@ -220,23 +220,22 @@ class DefaultController extends Controller
     {
         $modelProductSearchForm = new ProductSearchForm;
         $request = Yii::$app->request;
-        $modelProductSearchForm->load(json_decode($request->get('getParams'),true));
+        $modelProductSearchForm->load(json_decode($request->get('getParams'), true));
         $dataProvider = $modelProductSearchForm->search();
 
         $modelExport = new Export();
-        $file =$modelExport->writeToFile($dataProvider);
+        $file = $modelExport->writeToFile($dataProvider);
 
         //вывод .CSV файла отфильтрованной подборки в браузер
         header('Content-Description: File Transfer');
         header('Content-Type: text/csv; charset=UTF-8');
-        header('Content-Disposition: attachment; filename="'.'CSV-shop-'. date('d-m-y__Hi') . '.csv');
+        header('Content-Disposition: attachment; filename="' . 'CSV-shop-' . date('d-m-y__Hi') . '.csv');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
         echo $file;
         exit;
     }
-
 
 
 }

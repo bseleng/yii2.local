@@ -1,14 +1,9 @@
 <?php
+
 namespace app\modules\admin\modules\product\models;
-//require '../../../../vendor/autoload.php';
 
-use yii\base\Model;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-
-use yii\data\DataProviderInterface;
-use yii\data\ActiveDataProvider;
 
 class Export
 {
@@ -35,10 +30,10 @@ class Export
         }
         //если изображение шире колонки, сужаем его
         if ($colWidthPixels < $drawing->getWidth()) {
-            $drawing->setWidth($colWidthPixels*0.9);
+            $drawing->setWidth($colWidthPixels * 0.9);
         }
         //pixels
-        $offsetX = ($colWidthPixels - $drawing->getWidth())/2;
+        $offsetX = ($colWidthPixels - $drawing->getWidth()) / 2;
         //pixels
         return $drawing->setOffsetX($offsetX);
     }
@@ -57,10 +52,11 @@ class Export
     }
 
     /**
-     * записывает выбранную пользователем подборку с первой страницы в .XLS
+     * вохвращает выбранную пользователем подборку с первой страницы в объект SpreadSheet для записи в .XLS
+     *
      * @param object $dataProvider yii\data\ActiveDataProvider  полученный после выполнения поиска на странице ПРОДУКТ
+     * @return object Spreadsheet PhpOffice\PhpSpreadsheet\Spreadsheet;
      * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
     public function export($dataProvider)
     {
@@ -114,7 +110,7 @@ class Export
             //The list of data models in the current page.
             $collection = $dataProvider->getModels();
 
-            foreach($collection as $id => $model) {
+            foreach ($collection as $id => $model) {
                 //Устанавивает высоту ряда
                 $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($rowHeight);
 
@@ -125,7 +121,7 @@ class Export
                 $sheet->setCellValue('B' . $row, $model['brand']['brand_name']);
 
                 //записывает актуальную цену в Столбец  C
-                if($model['price_discounted'] != 0) {
+                if ($model['price_discounted'] != 0) {
                     $sheet->setCellValue('C' . $row, $model['price_discounted']);
                 } else {
                     $sheet->setCellValue('C' . $row, $model['price_base']);
@@ -137,11 +133,11 @@ class Export
                 $drawing->setName($model['product_name']);
                 $drawing->setDescription($model['product_name']);
                 //Указывает путь к изображению. !!!ВНИМАНИЕ!!! обратные слеши для  Windows
-                $drawing->setPath('uploads\shop\pic' . '\\' . $model['brand']['brand_name']  . '\\' . $model['image_path']);
+                $drawing->setPath('uploads\shop\pic' . '\\' . $model['brand']['brand_name'] . '\\' . $model['image_path']);
                 //Устанавливает ячейку для записи изобоажения
                 $drawing->setCoordinates('D' . $row);
                 //Устанавливает высоту изображения
-                $drawing->setHeight($rowHeight*0.75);
+                $drawing->setHeight($rowHeight * 0.75);
                 //Центрует изображение по горизонтали
                 $this->centerDrawingHorizontal($drawing, $colWidth);
                 //Центрует изображение по вертикали
@@ -154,7 +150,7 @@ class Export
                 $sheet->setCellValue('E' . $row, $model['product_description']);
 
                 //сначала увеличиваем значение ряда, чтобы не затирать, то что записали
-            $row++;
+                $row++;
             }
             //инкремент номера страницы
             $currentPage++;
@@ -162,17 +158,13 @@ class Export
 
         // для передачи пользователю
         return $spreadsheet;
-
-        //Для записи в UPLOADS
-        //записывает информацию из книги в файл !!!УТОЧНИТЬ!!!
-        $writer = new Xlsx($spreadsheet);
-        //Сохраняет файл книги с заданным названием
-        $writer->save('XLSX-shop-'. date('d-m-y Hi') . '.xlsx');
     }
 
     /**
-     * записывает выбранную пользователем подборку с первой страницы в .CSV
+     * записывает выбранную пользователем подборку в строку с разделителем ";", для .CSV
+     *
      * @param object $dataProvider yii\data\ActiveDataProvider  полученный после выполнения поиска на странице ПРОДУКТ
+     * @return string подборка после фильтров с разделителем ";", для .CSV
      */
     public function writeToFile($dataProvider)
     {
@@ -206,21 +198,21 @@ class Export
             //The list of data models in the current page.
             $collection = $dataProvider->getModels();
 
-            foreach($collection as $id => $model) {
+            foreach ($collection as $id => $model) {
                 //номер по порядку
                 $string .= $indexTotalModel . ';';
                 //название
-                $string .= $model['product_name']. ';';
+                $string .= $model['product_name'] . ';';
                 //бренд
-                $string .= $model['brand']['brand_name']. ';';
+                $string .= $model['brand']['brand_name'] . ';';
                 //выбор финальной цены (скидочной, если она есть, в противном случае - базовой)
-                if($model['price_discounted'] != 0) {
+                if ($model['price_discounted'] != 0) {
                     $string .= $model['price_discounted'] . ';';
                 } else {
-                    $string .= $model['price_base']. ';';
+                    $string .= $model['price_base'] . ';';
                 }
                 //описание
-                $string .= $model['product_description']. ';';
+                $string .= $model['product_description'] . ';';
                 //конец строци
                 $string .= PHP_EOL;
 
