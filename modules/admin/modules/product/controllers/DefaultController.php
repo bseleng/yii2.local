@@ -227,18 +227,14 @@ class DefaultController extends Controller
         $file =$modelExport->writeToFile($dataProvider);
 
         //вывод .CSV файла отфильтрованной подборки в браузер
-        if (file_exists($file)) {
-            header('Content-Description: File Transfer');
-            header('Content-Type: text/csv; charset=UTF-8');
-            header('Content-Disposition: attachment; filename="'.basename($file).'"');
-            header('Expires: 0');
-            header('Cache-Control: must-revalidate');
-            header('Pragma: public');
-            header('Content-Length: ' . filesize($file));
-            readfile($file);
-            unlink($file);
-            exit;
-        }
+        header('Content-Description: File Transfer');
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="'.'CSV-shop-'. date('d-m-y__Hi') . '.csv');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        echo $file;
+        exit;
     }
 
 

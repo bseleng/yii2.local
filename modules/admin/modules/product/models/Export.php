@@ -12,6 +12,8 @@ use yii\data\ActiveDataProvider;
 
 class Export
 {
+    //Количество элементов на странице для экспорта (ставим 1000, чтобы не нагружать БД)
+    private $pageSize = 1;
 
     /**
      * Устанавливает оффсет по оси X для расположения изображения по центру
@@ -69,15 +71,13 @@ class Export
 
         //the total number of data models.
         $totalModelCount = $dataProvider->getTotalCount();
-        // Устанавливаем размер страницы (количество моделей на странице) Ставим 1000, чтобы не нагружать БД
-        $dataProvider->getPagination()->setPageSize(1000);
-        //The number of items per page. Записываем размер страницы в переменную
-        $pageSize = $dataProvider->getPagination()->getPageSize();
+        // Устанавливаем размер страницы (количество моделей на странице)
+        $dataProvider->getPagination()->setPageSize($this->pageSize);
 
-        // Общий счётчик моделей
-        $indexTotalModel = 1;
+        //Вычисляем общее количество страниц
+        $totalPages = ceil($totalModelCount / $this->pageSize);
         // Записываем в переменную номер текущей страницы
-        $currentPage = $dataProvider->getPagination()->getPage();
+        $currentPage = 0;
         //счётчик для прохода по строкам листа
         $row = 2;
 
@@ -106,18 +106,15 @@ class Export
             ->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER);
 
 
-        while ($indexTotalModel <= $totalModelCount) {
+        while ($currentPage < $totalPages) {
             //Ставим номер страницы объекта пагинации (начиная с 0)
             $dataProvider->getPagination()->setPage($currentPage);
             // Обновляет данные датапровайдера.
             $dataProvider->refresh();
             //The list of data models in the current page.
             $collection = $dataProvider->getModels();
-            //счётчик моделей страницы
-            $indexModel = 0;
 
-            while($indexModel <= $pageSize AND $indexTotalModel <= $totalModelCount) {
-                foreach($collection as $id => $model) {
+            foreach($collection as $id => $model) {
                 //Устанавивает высоту ряда
                 $spreadsheet->getActiveSheet()->getRowDimension($row)->setRowHeight($rowHeight);
 
@@ -157,13 +154,7 @@ class Export
                 $sheet->setCellValue('E' . $row, $model['product_description']);
 
                 //сначала увеличиваем значение ряда, чтобы не затирать, то что записали
-                $row++;
-                //затем инкрементируем счётчик, чтобы пройти проверку  while()
-                //инкремент счётчика моделей для страницы
-                $indexModel++;
-                //инкремент общего счётчика моделей
-                $indexTotalModel++;
-                }
+            $row++;
             }
             //инкремент номера страницы
             $currentPage++;
@@ -187,75 +178,59 @@ class Export
     {
         //the total number of data models.
         $totalModelCount = $dataProvider->getTotalCount();
-        // Устанавливаем размер страницы (количество моделей на странице) Ставим 1000, чтобы не нагружать БД
-        $dataProvider->getPagination()->setPageSize(1000);
-        //The number of items per page. Записываем размер страницы в переменную
-        $pageSize = 1000; //сделать конст
+        // Устанавливаем размер страницы (количество моделей на странице)
+        $dataProvider->getPagination()->setPageSize($this->pageSize);
 
-        // Общий счётчик моделей
-        $indexTotalModel = 1;
+        //Вычисляем общее количество страниц
+        $totalPages = ceil($totalModelCount / $this->pageSize);
         // Записываем в переменную номер текущей страницы
         $currentPage = 0;
-
-        //Создаёт имя файла в формате  ДД-ММ-ГГ ЧЧММ)
-        $fileName = 'shop-'. date('d-m-y Hi') . '.csv';
-        //Создаёт файл и открывает его в режиме чтения
-        $handle = fopen($fileName, 'w');
+        //Общий счётчик моделей
+        $indexTotalModel = 1;
 
         //добавляет UTF-8 BOM для чтения кириллицы в Excel
         $BOM = "\xEF\xBB\xBF";
-        fwrite($handle, $BOM);
         //Записывает заголовок
         $topLine = '№; Наименование; Бренд; Стоимость; Описание;' . PHP_EOL;
-        fwrite($handle, $topLine);
 
-        while ($indexTotalModel <= $totalModelCount) {
+        $string = '';
+        $string .= $BOM . $topLine;
+
+        while ($currentPage < $totalPages) {
             //Ставим номер страницы объекта пагинации (начиная с 0)
             $dataProvider->getPagination()->setPage($currentPage);
 
-            ### КАК БЫЛО ЭТО ПОНЯТЬ?!##
             // Обновляет данные датапровайдера.
             $dataProvider->refresh();
 
             //The list of data models in the current page.
             $collection = $dataProvider->getModels();
-            //счётчик моделей страницы
-            $indexModel = 0;
 
-            while($indexModel <= $pageSize AND $indexTotalModel <= $totalModelCount) {
-                foreach($collection as $id => $model) {
-                    //номер по порядку
-                    $string = $indexTotalModel . ';';
-                    //название
-                    $string .= $model['product_name']. ';';
-                    //бренд
-                    $string .= $model['brand']['brand_name']. ';';
-                    //выбор финальной цены (скидочной, если она есть, в противном случае - базовой)
-                    if($model['price_discounted'] != 0) {
-                        $string .= $model['price_discounted'] . ';';
-                    } else {
-                        $string .= $model['price_base']. ';';
-                    }
-                    //описание
-                    $string .= $model['product_description']. ';';
-                    //конец строци
-                    $string .= PHP_EOL;
-
-//                    mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
-                    //запись строки
-                    fwrite($handle, $string);
-
-                    //инкремент счётчика моделей для страницы
-                    $indexModel++;
-                    //инкремент общего счётчика моделей
-                    $indexTotalModel++;
+            foreach($collection as $id => $model) {
+                //номер по порядку
+                $string .= $indexTotalModel . ';';
+                //название
+                $string .= $model['product_name']. ';';
+                //бренд
+                $string .= $model['brand']['brand_name']. ';';
+                //выбор финальной цены (скидочной, если она есть, в противном случае - базовой)
+                if($model['price_discounted'] != 0) {
+                    $string .= $model['price_discounted'] . ';';
+                } else {
+                    $string .= $model['price_base']. ';';
                 }
+                //описание
+                $string .= $model['product_description']. ';';
+                //конец строци
+                $string .= PHP_EOL;
+
+                //инкремент общего счётчика моделей
+                $indexTotalModel++;
             }
             //инкремент номера страницы
             $currentPage++;
         }
-        fclose($handle);
 
-        return $fileName;
+        return $string;
     }
 }
