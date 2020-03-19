@@ -190,12 +190,12 @@ class Export
         // Устанавливаем размер страницы (количество моделей на странице) Ставим 1000, чтобы не нагружать БД
         $dataProvider->getPagination()->setPageSize(1000);
         //The number of items per page. Записываем размер страницы в переменную
-        $pageSize = $dataProvider->getPagination()->getPageSize();
+        $pageSize = 1000; //сделать конст
 
         // Общий счётчик моделей
         $indexTotalModel = 1;
         // Записываем в переменную номер текущей страницы
-        $currentPage = $dataProvider->getPagination()->getPage();
+        $currentPage = 0;
 
         //Создаёт имя файла в формате  ДД-ММ-ГГ ЧЧММ)
         $fileName = 'shop-'. date('d-m-y Hi') . '.csv';
@@ -229,7 +229,7 @@ class Export
                     //название
                     $string .= $model['product_name']. ';';
                     //бренд
-                    $string .=  $model['brand']['brand_name']. ';';
+                    $string .= $model['brand']['brand_name']. ';';
                     //выбор финальной цены (скидочной, если она есть, в противном случае - базовой)
                     if($model['price_discounted'] != 0) {
                         $string .= $model['price_discounted'] . ';';
@@ -237,9 +237,9 @@ class Export
                         $string .= $model['price_base']. ';';
                     }
                     //описание
-                    $string .=  $model['product_description']. ';';
+                    $string .= $model['product_description']. ';';
                     //конец строци
-                    $string .=   PHP_EOL;
+                    $string .= PHP_EOL;
 
 //                    mb_convert_encoding($string, 'UTF-16LE', 'UTF-8');
                     //запись строки

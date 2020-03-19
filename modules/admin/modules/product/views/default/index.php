@@ -10,27 +10,6 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 ?>
 
-
-
-<div>.</div>
-<div>.</div>
-<?php echo '<h5>' .'Чистый ГЕТ ' . '</h5>'; var_dump(Yii::$app->request->get()); ?>
-<div>.</div>
-<div>.</div>
-<?php echo '<h5>' .'ГЕТ после декода ' . '</h5>' ; var_dump(json_decode(Yii::$app->request->get('getParams'), true)['ProductSearchForm']); ?>
-<div>.</div>
-<div>.</div>
-<div>.</div>
-<div>.</div>
-
-
-
-
-
-
-
-
-
 <?= $this->render('_product_search_form', ['modelProductSearchForm' => $modelProductSearchForm]); ?>
 
 <div class="row">
@@ -122,6 +101,7 @@ echo  GridView::widget([
 \yii\widgets\Pjax::end();
 ?>
 
+<div>
 <?php
 $form = ActiveForm::begin([
 'id' => 'export-form-xlsx',
@@ -140,7 +120,9 @@ $form = ActiveForm::begin([
 <?= Html::hiddenInput ( 'getParams', json_encode(Yii::$app->request->get())) ?>
 
 <?php ActiveForm::end(); ?>
+</div>
 
+<div>
 <?php
 $form = ActiveForm::begin([
     'id' => 'export-form-csv',
@@ -159,3 +141,4 @@ $form = ActiveForm::begin([
 <?= Html::hiddenInput ( 'getParams', json_encode(Yii::$app->request->get())) ?>
 
 <?php ActiveForm::end(); ?>
+</div>

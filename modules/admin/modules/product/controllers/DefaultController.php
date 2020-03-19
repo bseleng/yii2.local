@@ -226,6 +226,7 @@ class DefaultController extends Controller
         $modelExport = new Export();
         $file =$modelExport->writeToFile($dataProvider);
 
+        //вывод .CSV файла отфильтрованной подборки в браузер
         if (file_exists($file)) {
             header('Content-Description: File Transfer');
             header('Content-Type: text/csv; charset=UTF-8');
@@ -235,12 +236,8 @@ class DefaultController extends Controller
             header('Pragma: public');
             header('Content-Length: ' . filesize($file));
             readfile($file);
-            exit;
-        }
-
-        ignore_user_abort(true);
-        if (connection_aborted()) {
             unlink($file);
+            exit;
         }
     }
 
