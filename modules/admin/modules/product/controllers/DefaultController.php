@@ -6,15 +6,18 @@ use app\modules\admin\modules\product\models\BrandForm;
 use app\modules\admin\modules\product\models\Export;
 use app\modules\admin\modules\product\models\ProductForm;
 use app\modules\admin\modules\product\models\ProductSearchForm;
-use app\modules\admin\modules\product\models\UploadFile;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
 class DefaultController extends Controller
 {
-    //правила доступа (действия 'update', 'index' доступны только после входа в учётную запись)
+    /**
+     * задаёт правила доступа (действия 'update', 'index' доступны только после входа в учётную запись)
+     * @return array
+     */
     public function behaviors()
     {
         return [
@@ -32,27 +35,24 @@ class DefaultController extends Controller
         ];
     }
 
-    //открывает стартовую страницу
+    /**
+     * открывает стартовую страницу
+     *
+     * @return string
+     */
     public function actionIndex()
     {
         $modelProductSearchForm = new ProductSearchForm;
 
         $request = Yii::$app->request;
         $modelProductSearchForm->load($request->get());
-
-        $session = Yii::$app->session;
-        $session->open();
-        $session->set('url', $request->url);
-        $session->close();
+        Url::remember();
 
         return $this->render('index', [
             'modelProductSearchForm' => $modelProductSearchForm,
         ]);
-
-
     }
 
-    //открывает страницу для редактирования конкретной записи из модели
 
     /**
      * открывает представление редактирования товара
@@ -82,13 +82,9 @@ class DefaultController extends Controller
                     $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
                 }
             }
-            //если передан ЕХИТ то редирект $_GET[]
+            //если передан SaveExitBtn то редирект на предыдущую страницу
             if ($request->post('SaveExitBtn')) {
-
-                $session = Yii::$app->session;
-                $url = $session->get('url');
-                $referer = $request->getReferrer();
-                $this->redirect([$url]);
+                $this->redirect(Url::previous());
             }
         }
 
@@ -107,15 +103,13 @@ class DefaultController extends Controller
      *      если запрос не пустой - сохраняет данные в модель
      *      если запрос содержит значение кнопки СОХРАНИТЬ И ВЫЙТИ
      *          - возвращает в стандартное представление модуля ПРОДУКТ (список)
-     *
-     * @return string представление список товаров
+     * @return string
+     * @throws \yii\base\Exception
      */
     public function actionCreate()
     {
         $modelProductForm = new ProductForm;
 
-//ЭКСПОРТ
-//php EXCEL
         $request = Yii::$app->request;
         if ($modelProductForm->load($request->post())) {
             $modelProductForm->imageFile = UploadedFile::getInstance($modelProductForm, 'imageFile');
@@ -127,9 +121,9 @@ class DefaultController extends Controller
                     $modelProductForm->updateAttributes(['image_path' => $modelProductForm->constructFileName($modelProductForm->getPrimaryKey())]);
                 }
             }
-            //если передан ЕХИТ то редирект $_GET[]
+            //если передан SaveExitBtn то редирект на предыдущую страницу
             if ($request->post('SaveExitBtn')) {
-                $this->redirect(['index']);
+                $this->redirect(Url::previous());
             }
         }
 
@@ -141,8 +135,14 @@ class DefaultController extends Controller
         );
     }
 
-
-    //удаление записи с указанным ИД
+    /**
+     * удаление записи с указанным ИД
+     *
+     * @param int $id ИД товара, который нужно удалить
+     * @return \yii\web\Response
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
     public function actionDelete($id)
     {
         $modelProductForm = ProductForm::find()->where('product_id = :id', [':id' => $id])->one();
@@ -157,7 +157,6 @@ class DefaultController extends Controller
 
     /**
      * открывает представление добавления бренда в модальном окне
-     *
      * проверяет данные ПОСТ запроса, если не пустой - сохраняет данные в модель
      *
      * @return string модальное окно добавления бренда
@@ -170,34 +169,20 @@ class DefaultController extends Controller
             $modelBrandForm->save();
         }
 
-
         return $this->renderAjax(
             'create_brand',
             [
                 'modelBrandForm' => $modelBrandForm,
             ]
         );
-
     }
 
-    //стандартное действие загрузки файла из документации
-    public function actionUpload()
-    {
-        $model = new UploadFile();
-
-        if (Yii::$app->request->isPost) {
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-            if ($model->upload()) {
-                // file is uploaded successfully
-                $this->redirect(['upload']);
-                return;
-            }
-        }
-
-        return $this->render('upload', ['model' => $model]);
-    }
-
-
+    /**
+     * выводит .XLSX файл с подборкой отфильрованных товаров в бразуер
+     *
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function actionExportXlsx()
     {
         $modelProductSearchForm = new ProductSearchForm;
@@ -206,7 +191,6 @@ class DefaultController extends Controller
         $dataProvider = $modelProductSearchForm->search();
 
         $modelExport = new Export();
-
         //вывод .XLS файла отфильтрованной подборки в браузер
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename=' . 'XLSX-shop-' . date('d-m-y__Hi') . '.xlsx');
@@ -215,7 +199,9 @@ class DefaultController extends Controller
         $writer->save('php://output');
     }
 
-
+    /**
+     * выводит .CSV файл с подборкой отфильрованных товаров в бразуер
+     */
     public function actionExportCsv()
     {
         $modelProductSearchForm = new ProductSearchForm;
@@ -225,7 +211,6 @@ class DefaultController extends Controller
 
         $modelExport = new Export();
         $file = $modelExport->writeToFile($dataProvider);
-
         //вывод .CSV файла отфильтрованной подборки в браузер
         header('Content-Description: File Transfer');
         header('Content-Type: text/csv; charset=UTF-8');
@@ -237,6 +222,4 @@ class DefaultController extends Controller
         exit;
     }
 
-
 }
-

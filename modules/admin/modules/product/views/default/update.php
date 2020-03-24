@@ -5,7 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\bootstrap\Modal;
 use yii\widgets\Pjax;
-use yii\db\ActiveRecordInterface;
+use  yii\web\UrlManager;
 ?>
 
 <!--модальное окно из бутстрап-->
@@ -121,16 +121,22 @@ use yii\db\ActiveRecordInterface;
             'style'=> 'float:right;  margin:1rem;',
             'name' => 'SaveExitBtn',
             'value' => 'SaveExitBtn',
-//        url
     ]) ?>
 
 <?php ActiveForm::end(); ?>
+<?php $urlManager = new UrlManager; ?>
+
+<?= Html::a(
+    'Назад',
+    Yii::$app->request->getReferrer(),
+    [
+        'class' => 'btn btn-warning',
+        'style' => 'float: right; margin: 1rem 1rem;'
+    ]) ?>
 
 <?php
 
-var_dump($modelProductForm->image_path);
-var_dump($modelProductForm->product_id);
-var_dump($modelProductForm->getPrimaryKey());
+var_dump(Url::to(Yii::$app->request->getReferrer()));
 
 ?>
 

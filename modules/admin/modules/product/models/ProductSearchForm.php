@@ -2,8 +2,7 @@
 
 namespace app\modules\admin\modules\product\models;
 
-use Yii;
-use \app\models\Product;
+use app\models\Product;
 use yii\data\ActiveDataProvider;
 
 class ProductSearchForm extends Product
@@ -15,9 +14,9 @@ class ProductSearchForm extends Product
     public function rules()
     {
         return [
-            [['product_name', 'product_description', 'brandName' ], 'string'],
-            [['brand_id', ], 'integer'],
-            [['minPrice', 'maxPrice' ], 'double'],
+            [['product_name', 'product_description', 'brandName'], 'string'],
+            [['brand_id',], 'integer'],
+            [['minPrice', 'maxPrice'], 'double'],
             [['price_base', 'price_discounted',], 'number'],
         ];
     }
@@ -46,21 +45,23 @@ class ProductSearchForm extends Product
      * @param $query объект запроса с любыми фильтрами до него
      * @return mixed объект запроса с применёнными фильтрами минимальной цены
      */
-        public function filterMinPrice($query)
-        {
-            $query->andWhere([
-                'OR',
-                ['AND',
-                    ['<>','price_discounted', 0],
-                    ['>=','price_discounted', $this->minPrice],
-                ],
-                ['AND',
-                    ['=','price_discounted', 0],
-                    ['>=','price_base', $this->minPrice],
-                ],
-            ]);
-            return $query;
-        }
+    public function filterMinPrice($query)
+    {
+        $query->andWhere([
+            'OR',
+            [
+                'AND',
+                ['<>', 'price_discounted', 0],
+                ['>=', 'price_discounted', $this->minPrice],
+            ],
+            [
+                'AND',
+                ['=', 'price_discounted', 0],
+                ['>=', 'price_base', $this->minPrice],
+            ],
+        ]);
+        return $query;
+    }
 
     /**
      * применяет к объекту запроса фильтр по максимальной цене
@@ -72,13 +73,15 @@ class ProductSearchForm extends Product
     {
         $query->andWhere([
             'OR',
-            ['AND',
-                ['<>','price_discounted', 0],
-                ['<=','price_discounted', $this->maxPrice],
+            [
+                'AND',
+                ['<>', 'price_discounted', 0],
+                ['<=', 'price_discounted', $this->maxPrice],
             ],
-            ['AND',
-                ['=','price_discounted', 0],
-                ['<=','price_base', $this->maxPrice],
+            [
+                'AND',
+                ['=', 'price_discounted', 0],
+                ['<=', 'price_base', $this->maxPrice],
             ],
         ]);
         return $query;
@@ -113,7 +116,7 @@ class ProductSearchForm extends Product
             $this->filterMinPrice($query);
         }
 
-        if($this->maxPrice) {
+        if ($this->maxPrice) {
             $this->filterMaxPrice($query);
         }
 
