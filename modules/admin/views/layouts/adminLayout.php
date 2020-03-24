@@ -13,7 +13,6 @@ use app\assets\AppAsset;
 AppAsset::register($this);
 ?>
 
-
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -32,7 +31,7 @@ AppAsset::register($this);
     <?php
     NavBar::begin([
         'brandLabel' => 'Admin Panel',
-        'brandUrl' => ['/admin/default/index'],
+        'brandUrl' => ['/admin/product/default/index'],
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
@@ -40,11 +39,8 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/admin/default/index']],
             ['label' => 'Product', 'url' => ['/admin/product/default/index']],
             ['label' => 'Brand', 'url' => ['/admin/brand/default/index']],
-            ['label' => 'About', 'url' => ['/admin/default/info']],
-            ['label' => 'Contact', 'url' => ['/admin/default/contact']],
             Yii::$app->userAdmin->isGuest ? (
                 ['label' => 'Login', 'url' => ['/admin/default/login']]
             ) : (
@@ -73,7 +69,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; MouseShop <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>
