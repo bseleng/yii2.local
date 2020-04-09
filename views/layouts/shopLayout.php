@@ -1,6 +1,7 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use app\widgets\Alert;
@@ -12,7 +13,6 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 ?>
-
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -30,8 +30,8 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'Admin Panel',
-        'brandUrl' => ['/admin/product/default/index'],
+        'brandLabel' => 'Mouse Shop',
+        'brandUrl' => '/shop/index',
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
@@ -39,15 +39,14 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Product', 'url' => ['/admin/product/default/index']],
-            ['label' => 'Brand', 'url' => ['/admin/brand/default/index']],
-            Yii::$app->userAdmin->isGuest ? (
-                ['label' => 'Login', 'url' => ['/admin/default/login']]
+            ['label' => 'Home', 'url' => ['/shop/index']],
+            Yii::$app->user->isGuest ? (
+            ['label' => 'Login', 'url' => ['/shop/login']]
             ) : (
                 '<li>'
-                . Html::beginForm(['/admin/default/logout'], 'post')
+                . Html::beginForm(['/shop/logout'], 'post')
                 . Html::submitButton(
-                    'Logout (' . Yii::$app->userAdmin->identity->username . ')',
+                    'Logout (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout']
                 )
                 . Html::endForm()
@@ -61,15 +60,6 @@ AppAsset::register($this);
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-//            'links' =>
-//                [
-//                'label' => 'home',  // required
-//                'url' => 'admin/product/default/index',      // optional, will be processed by Url::to()
-//                ],
-//            [
-//                'label' => 'brand',  // required
-//                'url' => 'admin/product/default/brand',      // optional, will be processed by Url::to()
-//            ],
         ]) ?>
         <?= Alert::widget() ?>
         <?= $content ?>
@@ -78,7 +68,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; MouseShop <?= date('Y') ?></p>
+        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

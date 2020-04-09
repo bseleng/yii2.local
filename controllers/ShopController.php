@@ -16,6 +16,7 @@ use yii\helpers\VarDumper;
 
 class ShopController extends Controller
 {
+    public $layout = 'shopLayout';
     // выводимое количество товаров
     public $limit = 4;
 

@@ -23,11 +23,11 @@ class DefaultController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['update', 'index'],
+                'only' => ['update', 'index', 'create', 'update', 'delete'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['update', 'index',],
+                        'actions' => ['update', 'index', 'create', 'update', 'delete'],
                         'roles' => ['@'],
                     ],
                 ],

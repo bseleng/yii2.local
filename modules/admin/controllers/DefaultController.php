@@ -8,33 +8,32 @@ use Yii;
 
 class DefaultController extends Controller
 {
+    /**
+     * открывает страницу входа в учётную запись
+     * даёт возможность войти в учётную запись
+     *
+     * @return string|\yii\web\Response
+     */
 
-
-    //открывает стартовую страницу
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    //открывает страницу входа в учётную запись
-    //даёт возможность войти в учётную запись
     public function actionLogin()
     {
-        if (!Yii::$app->userAdmin->isGuest) {
-            return $this->redirect(['index']);
+        if (!Yii::$app->user->isGuest) {
+            return $this->redirect(['/admin/product/default/index']);
         }
 
         $model = new \app\modules\admin\models\LoginForm();
-        # НЕ ПОНИМАЮ что значит эта строка
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->redirect(['/admin/product/default/index']);
         }
-        # НЕ ПОНИМАЮ весь блок
+
         $model->password = '';
         return $this->render('login', [
             'model' => $model,
         ]);
     }
+
+
+
 
     /**
      * Logout action.
@@ -47,18 +46,6 @@ class DefaultController extends Controller
     {
         Yii::$app->userAdmin->logout();
         return $this->redirect(['login']);
-    }
-
-    //открывает страницу с информацией
-    public function actionInfo()
-    {
-        return $this->render('info');
-    }
-
-    //открывает страницк контактов
-    public function actionContact()
-    {
-        return $this->render('contact');
     }
 
 }

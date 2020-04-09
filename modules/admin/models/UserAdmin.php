@@ -27,8 +27,8 @@ class UserAdmin extends \yii\base\BaseObject implements \yii\web\IdentityInterfa
         ],
         '102' => [
             'id' => '102',
-            'username' => 'adm1',
-            'password' => 'adm1',
+            'username' => 'adm2',
+            'password' => 'adm2',
             'authKey' => 'test102key',
             'accessToken' => '102-token',
         ],
