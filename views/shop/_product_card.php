@@ -23,19 +23,22 @@ use yii\base\View;
 
         <!-- Див с кнопками КУПИТЬ и ИНФО-->
         <div class='bs-product-buttons'>
-            <?php
-            echo Html::button(Html::encode('Купить'),
+            <?=
+            Html::button(
+                Html::encode('Купить'),
                 [
-                    'class' => ['bs-button', 'buy-button']
-
+                    'class' => ['bs-button', 'buy-button'],
+                    'product-id' => $modelProduct->product_id,
+                    'quantity' => 1,
                 ]);
+            ?>
 
-            echo Html::button(Html::encode('Инфо'),
+            <?=
+            Html::button(
+                Html::encode('Инфо'),
                 [
                     'class' => ['bs-button','info-button']
-
                 ]);
-
             ?>
 
         </div>
@@ -81,15 +84,12 @@ use yii\base\View;
 $js = <<<JS
 $ (function()
 {
-   $("#btn-info").on('click', function() {
-       console.log('info clicked');
-       $(this).closest("#face-content").hide();
-   }) ;
+    
 });
 
-
 JS;
+
 $this->registerJs($js);
 
-
+////findByPk
 ?>

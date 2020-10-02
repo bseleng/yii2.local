@@ -23,6 +23,13 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+        'userAdmin' => [
+            'class' => 'yii\web\User',
+            'identityClass' => 'app\modules\admin\models\UserAdmin',
+            'enableAutoLogin' => true,
+            # НЕ РАБОТАЕТ В КОНФИГЕ!
+//            'loginUrl' => ['/admin/default/login'],
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
@@ -53,6 +60,20 @@ $config = [
 
     ],
     'params' => $params,
+
+    'modules' => [
+        'admin' => [
+            'class' => 'app\modules\admin\AdminModule',
+            'modules' => [
+               'product' => [
+                   'class' => 'app\modules\admin\modules\product\ProductModule',
+               ],
+                'brand' => [
+                    'class' => 'app\modules\admin\modules\brand\BrandModule',
+                ],
+            ],
+        ],
+    ],
 ];
 
 if (YII_ENV_DEV) {

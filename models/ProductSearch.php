@@ -7,6 +7,7 @@ use \yii\db\Query;
 use Yii;
 use app\components\Helper;
 
+
 class ProductSearch extends Product
 {
     public $productNameSort;
@@ -19,13 +20,9 @@ class ProductSearch extends Product
     {
         return [
             //
-            [[
-                'brand_id',
-                'productNameSort',
-                'productMinPrice',
-                'productMaxPrice',
+            [
+                ['brand_id', 'productNameSort', 'productMinPrice', 'productMaxPrice',], 'integer'
             ],
-            'integer'],
         ];
     }
 
@@ -36,7 +33,7 @@ class ProductSearch extends Product
      *      минимльная цена,
      *      бренд,
      *      сортировка по алфавиту
-     *      сортировка по ========
+     *      сортировка по ценам
      * ), полученных от пользователя
      *
      * @return \yii\db\ActiveQuery часть yii2 запроса с фильтрами
@@ -110,8 +107,8 @@ class ProductSearch extends Product
         } elseif ($this->productNameSort == 3) {
             $query->orderBy('price_final DESC');
         } elseif ($this->productNameSort == 4) {
-            //$query->orderBy('price_discounted DESC, price_base DESC');
-            $query->orderBy(['(price_discounted - price_base)'=> SORT_DESC]);
+            $query->orderBy('price_discounted DESC, price_base DESC');
+//            $query->orderBy(['(price_discounted - price_base)'=> SORT_DESC]);
         }
 
         return $query;

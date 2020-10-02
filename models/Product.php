@@ -5,6 +5,7 @@ namespace app\models;
 use \yii\db\ActiveRecord;
 use \yii\BaseYii;
 
+
 class Product extends ActiveRecord
 {
     /**
@@ -26,6 +27,7 @@ class Product extends ActiveRecord
     public function getBrand()
     {
         return $this->hasOne(Brand::class, ['brand_id' => 'brand_id']);
+
     }
 
     /**
@@ -83,7 +85,24 @@ class Product extends ActiveRecord
         $imagePath .= '/' . $this->brand->brand_name;
         $imagePath .= '/' . $this->image_path;
 
+
         return  strtolower($imagePath);
+    }
+
+    //так как не могу наследовать свойства шоппингкартом
+    public static function getProductId()
+    {
+        return self::product_id;
+    }
+
+    public function setOrder($productId, $quantity)
+    {
+        $session['order'] = [
+            'productId' => $productId,
+            'quantity' => $quantity,
+        ];
+
+        return $session;
     }
 
 

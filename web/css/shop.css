@@ -340,16 +340,17 @@ Buttons
     
 .bs-page-stats {
   position:fixed;
-  bottom: 0;
+  bottom: 4.28rem;
   right:0;
   background-color: #406eb7;
   color: white;
   font-family: 'Lato', sans-serif;
-  font-size: 1rem;
+  font-size: 2rem;
   margin: 0;
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   text-align: left;
-  zoom: 0.5;
+  width: 25rem;
+  display: none;
 }
 
 .bs-load {

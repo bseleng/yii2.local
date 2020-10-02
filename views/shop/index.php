@@ -21,7 +21,14 @@ use yii\base\View;
 
 // выводим товар попадающий под фильтр
 echo $this->render('_filter_bar', ['modelProductSearch'=> $modelProductSearch]);
-echo $this->render('_product', ['modelProductSearch'=> $modelProductSearch]);
+echo $this->render(
+    '_product',
+    [
+        'modelProductSearch' => $modelProductSearch,
+        'modelProduct' => $modelProduct,
+        'modelShoppingCart' => $modelShoppingCart,
+    ]
+);
 
 //$this->params['brandSort'][] = $modelProductSearch->brand_id;
 //var_dump($this->params['brandSort']);
